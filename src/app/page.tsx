@@ -1,7 +1,7 @@
-
 import HeroBanner from "@/components/homepage/HeroBanner";
 import ServicesSection from "@/components/homepage/ServicesSection";
 import MantraSection from "@/components/homepage/MantraSection";
+import LatestEventsSection from "@/components/homepage/LatestEventsSection";
 
 
 export default function Home() {
@@ -11,6 +11,7 @@ export default function Home() {
         <HeroBanner />
         <ServicesSection />
         <MantraSection />
+        <LatestEventsSection />
       </main>
     </>
   );
