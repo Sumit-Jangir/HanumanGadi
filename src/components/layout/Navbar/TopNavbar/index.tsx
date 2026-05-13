@@ -49,7 +49,7 @@ const getNavData: NavMenu = [
     id: 5,
     type: "MenuItem",
     label: "Contact Us",
-    url: "/contact",
+    url: "/contact-us",
     children: [],
   },
 ];
