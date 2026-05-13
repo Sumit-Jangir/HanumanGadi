@@ -22,14 +22,15 @@ export function MenuItem({ label, url }: MenuItemProps) {
 
   return (
     <NavigationMenuItem>
-      <Link href={url ?? "/"} legacyBehavior passHref>
-        <NavigationMenuLink
-          className={cn([
-            navigationMenuTriggerStyle(),
-            "relative bg-transparent hover:bg-transparent focus:bg-transparent px-3 py-1.5 transition-colors duration-300",
-            isActive ? "text-brand-orange font-semibold text-base" : "font-normal hover:text-brand-orange text-base",
-          ])}
-        >
+      <NavigationMenuLink
+        asChild
+        className={cn([
+          navigationMenuTriggerStyle(),
+          "relative bg-transparent hover:bg-transparent focus:bg-transparent px-3 py-1.5 transition-colors duration-300",
+          isActive ? "text-brand-orange font-semibold text-base" : "font-normal hover:text-brand-orange text-base",
+        ])}
+      >
+        <Link href={url ?? "/"}>
           {/* Text with subtle lift on hover */}
           <motion.span
             className="relative font-semibold inline-block"
@@ -57,8 +58,8 @@ export function MenuItem({ label, url }: MenuItemProps) {
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
             />
           )}
-        </NavigationMenuLink>
-      </Link>
+        </Link>
+      </NavigationMenuLink>
     </NavigationMenuItem>
   );
 }

@@ -28,7 +28,7 @@ const getNavData: NavMenu = [
     id: 2,
     type: "MenuItem",
     label: "About Us",
-    url: "/about",
+    url: "/about-us",
     children: [],
   },
   {
