@@ -102,7 +102,7 @@ const HeroBanner = () => {
   return (
     <section
       //  className="relative w-full overflow-hidden mx-3 rounded-2xl h-[25vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh] xl:h-[80vh] md:mx-0 md:rounded-none max-h-[900px]"
-      className="relative w-full aspect-[1920/600] min-h-[220px] overflow-hidden rounded-2xl  md:mx-0  md:rounded-none  "
+      className="relative w-full aspect-[1920/600] overflow-hidden rounded-2xl  md:mx-0  md:rounded-none  "
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
