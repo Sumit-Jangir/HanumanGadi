@@ -120,8 +120,8 @@ const LoginModal = () => {
                       type="tel"
                       placeholder="Enter mobile number"
                       className={`w-full rounded-xl border bg-gray-50 py-3.5 pl-12 pr-4 text-gray-900 outline-none transition-all focus:bg-white focus:ring-2 ${formik.touched.mobile && formik.errors.mobile
-                          ? "border-red-500 focus:ring-red-200"
-                          : "border-[#61341c] focus:border-[#ed940b] focus:ring-[#ed940b]/20"
+                        ? "border-red-500 focus:ring-red-200"
+                        : "border-[#61341c] focus:border-[#ed940b] focus:ring-[#ed940b]/20"
                         }`}
                       onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, ""); // remove non-numbers
@@ -155,7 +155,7 @@ const LoginModal = () => {
                 <button
                   type="submit"
                   disabled={formik.isSubmitting}
-                  className="mt-4 flex w-full items-center justify-center rounded-xl bg-[#61341c] py-3.5 font-semibold text-white shadow-lg transition-all hover:bg-[#4a2614] hover:shadow-xl active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100"
+                  className="mt-4 btn-gradient-slide flex w-full items-center justify-center"
                 >
                   {formik.isSubmitting ? (
                     <>
