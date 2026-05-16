@@ -8,25 +8,25 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const slides = [
   {
     id: 1,
-    src: "/banners/banner1.png",
+    src: "/banners/AstrologerHomePageBanners.png",
     alt: "Shri Ram Raksha Yantra",
     href: "/shop",
     btnLabel: "Book Now",
   },
   {
     id: 2,
-    src: "/banners/banner2.png",
+    src: "/banners/AstrologerHomePageBanners2.png",
     alt: "Yagya Puja",
     href: "/shop",
     btnLabel: "अभी बुक करें",
   },
-  {
-    id: 3,
-    src: "/banners/banner3.png",
-    alt: "Sacred Yantras",
-    href: "/shop",
-    btnLabel: "Explore",
-  },
+  // {
+  //   id: 3,
+  //   src: "/banners/banner5.png",
+  //   alt: "Sacred Yantras",
+  //   href: "/shop",
+  //   btnLabel: "Explore",
+  // },
 ];
 
 const AUTOPLAY_DELAY = 4500;
@@ -102,7 +102,8 @@ const HeroBanner = () => {
 
   return (
     <section
-      className="relative max-w-full overflow-hidden mx-3 rounded-2xl h-[200px] xs:h-[240px] md:mx-0  md:rounded-none sm:h-[380px] md:h-[480px] lg:h-[580px] xl:h-[640px]"
+    //  className="relative w-full overflow-hidden mx-3 rounded-2xl h-[25vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh] xl:h-[80vh] md:mx-0 md:rounded-none max-h-[900px]"
+     className="relative w-full aspect-[1920/600] min-h-[220px] overflow-hidden rounded-2xl  md:mx-0  md:rounded-none  "
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -134,18 +135,20 @@ const HeroBanner = () => {
             <Image
               src={slides[current].src}
               alt={slides[current].alt}
-              fill
+              width={1920}
+              height={600}
               priority
-              className="object-cover object-center select-none pointer-events-none"
+              className="object-cover select-none pointer-events-none"
               sizes="100vw"
-              onLoad={() => setImgLoaded(true)}
+              onLoadingComplete={() => setImgLoaded(true)}
+              // onError={() => setImgLoaded(true)} // <-- Add this line
             />
           </motion.div>
 
           {/* Skeleton shimmer while loading */}
-          {!imgLoaded && (
+          {/* {!imgLoaded && (
             <div className="absolute inset-0 bg-brand-cream-dark animate-pulse" />
-          )}
+          )} */}
         </motion.div>
       </AnimatePresence>
 

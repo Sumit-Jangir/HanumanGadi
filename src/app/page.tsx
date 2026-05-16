@@ -7,7 +7,7 @@ import LatestEventsSection from "@/components/homepage/LatestEventsSection";
 export default function Home() {
   return (
     <>
-      <main className="bg-[#f8e8dd] mx-auto pt-3 md:pt-0">
+      <main className="px-3 pt-3 md:p-0">
         <HeroBanner />
         <ServicesSection />
         <MantraSection />

@@ -39,12 +39,12 @@ const content = {
     addressLines: ["Shri Ram Satsang Bhawan Choti Chhavni", "Ayodhya, 224001"],
   },
   hi: {
-    bannerAlt: "संपर्क करें – हनुमानगढ़ी",
+    bannerAlt: "संपर्क करें - हनुमानगढ़ी",
     pageHeading: "संपर्क करें",
     formTitle: "हमें संदेश भेजें",
     // formSubtitle: "हम 24 घंटे के भीतर आपसे संपर्क करेंगे।",
     namePlaceholder: "अपना नाम दर्ज करें",
-    mobilePlaceholder: "अपना मोबाइल दर्ज करें",
+    mobilePlaceholder: "अपना मोबाइल नंबर दर्ज करें",
     emailPlaceholder: "अपना ईमेल दर्ज करें",
     messagePlaceholder: "अपना संदेश दर्ज करें...",
     submitBtn: "सबमिट करें",
@@ -193,16 +193,16 @@ export default function ContactUsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#fdf8f2] overflow-x-hidden">
+    <div className="bg-[#fdf8f2] overflow-x-hidden">
       {/* ══════════ HERO BANNER ══════════ */}
       <section className="w-full">
-        <div className="w-full h-[280px] md:h-[520px] overflow-hidden">
+        <div className="w-full h-auto overflow-hidden">
           <Image
-            src="/banners/about-us.png"
+            src="/banners/AstrologerContactUs.png"
             alt={t.bannerAlt}
             width={1920}
-            height={420}
-            className="w-full h-full object-cover"
+            height={600}
+            className="w-full h-full object-contain"
             priority
           />
         </div>

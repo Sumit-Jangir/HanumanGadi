@@ -5,24 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, UserCircle2, ShoppingBag, LogOut, LogIn, X } from "lucide-react";
 
-// ---------------------------------------------------------------------------
-// Minimal auth helper — replace with your real auth (NextAuth, Clerk, etc.)
-// ---------------------------------------------------------------------------
-function useAuth() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setIsLoggedIn(localStorage.getItem("auth_token") !== null);
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem("auth_token");
-    setIsLoggedIn(false);
-  };
-
-  return { isLoggedIn, logout };
-}
-// ---------------------------------------------------------------------------
+import useAuthStore from "@/lib/stores/authStore";
 
 const dropdownVariants = {
   hidden: { opacity: 0, scale: 0.9, y: -12 },
@@ -52,7 +35,7 @@ const itemVariants = {
 const UserMenuBtn = () => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, openLogin } = useAuthStore();
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -167,14 +150,16 @@ const UserMenuBtn = () => {
               ) : (
                 <>
                   <motion.div custom={0} variants={itemVariants} initial="hidden" animate="visible">
-                    <Link
-                      href="/signin"
-                      onClick={() => setOpen(false)}
+                    <button
+                      onClick={() => {
+                        setOpen(false);
+                        openLogin();
+                      }}
                       className="btn-gradient-slide flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
                     >
                       <LogIn size={15} strokeWidth={2} />
                       Login
-                    </Link>
+                    </button>
                   </motion.div>
                 </>
               )}

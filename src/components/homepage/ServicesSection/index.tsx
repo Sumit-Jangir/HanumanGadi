@@ -90,7 +90,7 @@ const ServicesSection = () => {
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ delay: index * 0.08, duration: 0.45 }}
               className="group rounded-xl bg-white/80 border border-white shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
             >

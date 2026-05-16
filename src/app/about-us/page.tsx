@@ -93,7 +93,7 @@ function OrnamentDivider() {
   return (
     <div className="flex items-center justify-center gap-3 my-2">
       <motion.span
-        className="h-[2px] w-16 bg-gradient-to-r from-transparent to-orange-400 rounded-full"
+        className="h-[2px] sm:h-[3px] w-32 sm:w-64 bg-gradient-to-r from-transparent to-orange-400 rounded-full"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -101,14 +101,14 @@ function OrnamentDivider() {
         style={{ transformOrigin: "right" }}
       />
       <motion.span
-        className="text-orange-500 text-xl"
+        className="font-extrabold text-orange-500 text-xl"
         animate={{ rotate: [0, 360] }}
         transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
       >
         ✦
       </motion.span>
       <motion.span
-        className="h-[2px] w-16 bg-gradient-to-l from-transparent to-orange-400 rounded-full"
+        className="h-[2px] sm:h-[3px] w-32 sm:w-64 bg-gradient-to-l from-transparent to-orange-400 rounded-full"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -125,20 +125,20 @@ export default function AboutUsPage() {
   const t = content[language];
 
   return (
-    <div className="min-h-screen bg-[#fdf8f2] overflow-x-hidden">
+    <div className="max-w-[1900px] mx-auto bg-[#fdf8f2] overflow-x-hidden">
 
       {/* ══════════ HERO BANNER ══════════ */}
       <section className="w-full">
         {/* Full-width banner image */}
         <div className="m-3 md:m-0">
 
-          <div className="w-full md:h-[520px] rounded-2xl md:rounded-none overflow-hidden">
+          <div className="w-full h-auto rounded-2xl md:rounded-none overflow-hidden">
             <Image
-              src="/banners/about-us.png"
-              alt={"About Us \u2013 Hanumangadi"}
+              src="/banners/AstrologerAboutUs.png"
+              alt="About Us - Hanumangadi"
               width={1920}
-              height={420}
-              className="w-full h-full object-cover"
+              height={600}
+              className="w-full h-full object-contain"
               priority
             />
           </div>
@@ -180,7 +180,7 @@ export default function AboutUsPage() {
               className="rounded-3xl shadow-2xl object-cover border-2 border-orange-100 w-full"
             />
             {/* Badge */}
-            <motion.div
+            {/* <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
@@ -188,7 +188,7 @@ export default function AboutUsPage() {
               className="absolute -bottom-4 -right-4 bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg"
             >
               {t.badge1}
-            </motion.div>
+            </motion.div> */}
           </motion.div>
 
           {/* Text */}
@@ -200,20 +200,22 @@ export default function AboutUsPage() {
             viewport={{ once: true, amount: 0.3 }}
             className="flex-1"
           >
-            <span className="inline-block mb-3 text-xs font-bold tracking-widest uppercase text-orange-500 bg-orange-50 border border-orange-200 rounded-full px-3 py-1">
+            {/* <span className="inline-block mb-3 text-xs font-bold tracking-widest uppercase text-orange-500 bg-orange-50 border border-orange-200 rounded-full px-3 py-1">
               {t.whoWeAre}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
+            </span> */}
+            {/* <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
               {t.missionTitle} <span className="text-orange-600">{t.missionHighlight}</span>
-            </h2>
-            <OrnamentDivider />
-            <div className="mt-5 space-y-4 text-gray-600 text-[1.05rem] leading-relaxed">
+            </h2> */}
+            {/* <OrnamentDivider /> */}
+            <div className="space-y-4 text-gray-600 text-[1.05rem] leading-relaxed">
               <p>{t.mission1}</p>
               <p>{t.mission2}</p>
             </div>
           </motion.div>
         </div>
       </section>
+
+      <OrnamentDivider />
 
       {/* ══════════ SECTION 2 — Renowned Astrologer ══════════ */}
       <section className="py-20 px-4 bg-gradient-to-br from-orange-50 via-amber-50 to-orange-50">
@@ -235,7 +237,7 @@ export default function AboutUsPage() {
               height={420}
               className="rounded-3xl shadow-2xl object-cover border-2 border-amber-100 w-full"
             />
-            <motion.div
+            {/* <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
@@ -243,7 +245,7 @@ export default function AboutUsPage() {
               className="absolute -bottom-4 -left-4 bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg"
             >
               {t.badge2}
-            </motion.div>
+            </motion.div> */}
           </motion.div>
 
           {/* Text */}
@@ -255,14 +257,14 @@ export default function AboutUsPage() {
             viewport={{ once: true, amount: 0.3 }}
             className="flex-1"
           >
-            <span className="inline-block mb-3 text-xs font-bold tracking-widest uppercase text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+            {/* <span className="inline-block mb-3 text-xs font-bold tracking-widest uppercase text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
               {t.ourLeadership}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
+            </span> */}
+            {/* <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
               {t.renownedTitle} <span className="text-amber-600">{t.renownedHighlight}</span>
-            </h2>
-            <OrnamentDivider />
-            <div className="mt-5 space-y-4 text-gray-600 text-[1.05rem] leading-relaxed">
+            </h2> */}
+            {/* <OrnamentDivider /> */}
+            <div className="space-y-4 text-gray-600 text-[1.05rem] leading-relaxed">
               <p>{t.renowned1}</p>
               <p>{t.renowned2}</p>
             </div>
