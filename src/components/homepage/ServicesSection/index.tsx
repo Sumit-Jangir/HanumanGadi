@@ -81,7 +81,8 @@ const ServicesSection = () => {
           {t.empty}
         </div>
       ) : (
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-6">          {services.map((item, index) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-6">
+          {services.map((item, index) => {
             const title =
               language === "hi" ? item.titleHi || item.title : item.title;
 
@@ -97,7 +98,7 @@ const ServicesSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ delay: index * 0.08, duration: 0.45 }}
-                className="group h-full max-w-[400px] min-w-[400px] overflow-hidden rounded-2xl bg-white/90 border border-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className="group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] xs:min-w-[365px] sm:min-w-[400px] overflow-hidden rounded-2xl bg-white/90 border border-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="relative h-[380px] md:h-[400px] bg-[#fff8f1] overflow-hidden">
                   <img
