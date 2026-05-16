@@ -1,6 +1,5 @@
 import { apiGet } from "@/utils/api";
 
-const GALLERY_API = "/api/gallery";
 
 export type GalleryVideo = {
   title: string;
@@ -15,7 +14,7 @@ type GalleryApiResponse = {
 };
 
 export const getGallery = async () => {
-  const response = await apiGet<GalleryApiResponse>(GALLERY_API);
+  const response = await apiGet<GalleryApiResponse>("/get_gallery");
 
   return {
     status: Boolean(response.status),

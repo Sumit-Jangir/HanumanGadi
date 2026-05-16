@@ -140,7 +140,8 @@ const HeroBanner = () => {
               priority
               className="object-cover select-none pointer-events-none"
               sizes="100vw"
-              onLoadingComplete={() => setImgLoaded(true)}
+              // onLoadingComplete={() => setImgLoaded(true)}
+              onLoad={() => setImgLoaded(true)}
               // onError={() => setImgLoaded(true)} // <-- Add this line
             />
           </motion.div>

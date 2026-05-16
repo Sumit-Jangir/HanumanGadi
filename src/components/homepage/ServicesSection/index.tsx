@@ -60,8 +60,10 @@ const ServicesSection = () => {
     };
   }, []);
 
+  
   const services = useMemo(() => items.slice(0, 3), [items]);
   const t = copy[language];
+  console.log("items state:", services);
 
   return (
     <section className="max-w-frame mx-auto px-4 xl:px-0 py-8 md:py-12">
@@ -95,13 +97,15 @@ const ServicesSection = () => {
               className="group rounded-xl bg-white/80 border border-white shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
             >
               <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={item.image || "/banners/banner1.png"}
+                <img
+                  src={
+                    item.image && item.image.startsWith('http')
+                      ? `/api/image-proxy?url=${encodeURIComponent(item.image)}`
+                      : "/banners/AstrologerContactUs.png"
+                  }
                   alt={item.title}
-                  fill
-                  unoptimized={Boolean(item.image?.startsWith("http"))}
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 w-full h-full"
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                 />
               </div>
 

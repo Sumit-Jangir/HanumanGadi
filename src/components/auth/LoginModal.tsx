@@ -170,12 +170,12 @@ const LoginModal = () => {
             </div>
 
             {/* Right Image Section */}
-            <div className="relative hidden w-full bg-[#61341c] md:block md:w-[40%]">
+            <div className="relative hidden w-full md:block md:w-[40%]">
               <Image
                 src="/banners/AstrologerLoginPage.png"
                 alt="Login Banner"
                 fill
-                className="object-cover opacity-90 mix-blend-overlay"
+                className="object-cover"
                 priority
               />
               {/* <div className="absolute inset-0 bg-gradient-to-t from-[#61341c] via-[#61341c]/40 to-transparent" /> */}

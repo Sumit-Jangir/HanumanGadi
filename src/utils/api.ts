@@ -37,13 +37,7 @@ export const fetcher = async <T = any>(
   url: string,
   options?: AxiosRequestConfig,
 ): Promise<T> => {
-  const isAbsoluteUrl = /^https?:\/\//i.test(url);
-  const isRootRelativeUrl = url.startsWith("/");
-  const fullUrl = isAbsoluteUrl
-    ? url
-    : isRootRelativeUrl
-      ? url
-      : `${BASE_URL ?? ""}${url}`;
+ const fullUrl = `${BASE_URL}${url}`;
   try {
     const response = await axios({
       url: fullUrl,

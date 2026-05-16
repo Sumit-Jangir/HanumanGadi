@@ -1,6 +1,6 @@
 import { fetcher } from "@/utils/api";
 
-const CONTACT_US_API = "/api/contact-us";
+// const CONTACT_US_API = "/api/contact-us";
 
 export type ContactUsPayload = {
   name: string;
@@ -21,7 +21,7 @@ export const saveContactUs = async (payload: ContactUsPayload): Promise<ContactU
   formData.append("email", payload.email);
   formData.append("msg", payload.msg);
 
-  const response = await fetcher<ContactUsResponse>(CONTACT_US_API, {
+  const response = await fetcher<ContactUsResponse>("/saveContactUs", {
     method: "POST",
     data: formData,
   });

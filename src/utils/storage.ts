@@ -19,7 +19,9 @@ export const getStorage = (key: string) => {
     }
     return parsed;
   } catch (error) {
-    console.error(`Failed to parse localStorage item for key "${key}":`, error);
+    // If parsing fails, remove the corrupted item and return null
+    console.warn(`Corrupted localStorage for key "${key}", removing.`, error);
+    localStorage.removeItem(key);
     return null;
   }
 };

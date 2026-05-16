@@ -1,7 +1,7 @@
 import { apiGet } from "@/utils/api";
 
-const PRODUCTS_API = "/api/products";
-const YAGYA_API = "/api/yagya";
+// const PRODUCTS_API = "/api/products";
+// const YAGYA_API = "/api/yagya";
 
 type ApiBaseResponse<T> = {
   msg: string;
@@ -62,12 +62,12 @@ const toHomeProduct = (item: RawProductItem): HomeProduct => ({
 });
 
 export const getProducts = async (): Promise<HomeProduct[]> => {
-  const response = await apiGet<ApiBaseResponse<RawProductItem>>(PRODUCTS_API);
+  const response = await apiGet<ApiBaseResponse<RawProductItem>>("/get_product");
   return (response.data || []).map(toHomeProduct);
 };
 
 export const getYagyaProducts = async (): Promise<HomeProduct[]> => {
-  const response = await apiGet<ApiBaseResponse<RawProductItem>>(YAGYA_API);
+  const response = await apiGet<ApiBaseResponse<RawProductItem>>("/get_yagya");
   return (response.data || []).map(toHomeProduct);
 };
 
