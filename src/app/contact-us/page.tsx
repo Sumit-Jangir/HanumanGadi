@@ -20,7 +20,7 @@ import { useLanguageStore } from "@/lib/stores/languageStore";
 /* ─── Bilingual Content ───────────────────────────────────────────── */
 const content = {
   en: {
-    bannerAlt: "Contact Us – Hanumangadi",
+    bannerAlt: "Contact Us - Hanumangadi",
     pageHeading: "Contact Us",
     formTitle: "Send Us a Message",
     // formSubtitle: "We'll get back to you within 24 hours.",
@@ -195,8 +195,8 @@ export default function ContactUsPage() {
   return (
     <div className="bg-[#fdf8f2] overflow-x-hidden">
       {/* ══════════ HERO BANNER ══════════ */}
-      <section className="w-full">
-        <div className="w-full h-auto overflow-hidden">
+      <section className="w-full p-3 pb-0 sm:p-0 md:p-0">
+        <div className="w-full h-auto rounded-2xl md:rounded-none overflow-hidden">
           <Image
             src="/banners/AstrologerContactUs.png"
             alt={t.bannerAlt}
@@ -221,7 +221,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* ══════════ CONTACT BODY ══════════ */}
-      <section className="py-12 px-4 max-w-6xl mx-auto">
+      <section className="pb-0 sm:py-12 px-4 max-w-6xl mx-auto ">
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* ── Form Card ── */}
           <motion.div

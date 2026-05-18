@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { getHomeServices, HomeProduct } from "@/services/product";
 import { useLanguageStore } from "@/lib/stores/languageStore";
 import Image from "next/image";
+import useAuthStore from "@/lib/stores/authStore";
+import { useCartStore } from "@/lib/stores/cartStore";
 
 
 const fadeUp = {
@@ -45,6 +47,20 @@ export default function ShopPage() {
   const { language } = useLanguageStore();
   const [items, setItems] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const { isLoggedIn, openLogin } = useAuthStore();
+  const { addToCart } = useCartStore();
+  const [addingId, setAddingId] = useState<string | null>(null);
+
+  const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>, item: HomeProduct) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      openLogin();
+      return;
+    }
+    setAddingId(item?.slug.toString());
+    await addToCart(item?.slug.toString(), "1");
+    setAddingId(null);
+  };
 
   useEffect(() => {
     let active = true;
@@ -68,7 +84,7 @@ export default function ShopPage() {
   const t = copy[language];
 
   return (
-    <div className="max-w-[1900px] mx-auto bg-[#fdf8f2] overflow-x-hidden">
+    <div className="theme-page max-w-[1920px] mx-auto overflow-x-hidden">
       {/* Banner Section */}
       <section className="w-full">
         <div className="m-3 md:m-0">
@@ -181,12 +197,13 @@ export default function ShopPage() {
                       </span>
                     </div>
 
-                    <Link
-                      href={`/shop`}
-                      className="mt-5 btn-gradient-slide inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02]"
+                    <button
+                      onClick={(e) => handleAddToCart(e, item)}
+                      disabled={addingId === item.id.toString()}
+                      className="mt-5 btn-gradient-slide inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      {t.cta}
-                    </Link>
+                      {addingId === item.id.toString() ? "Adding..." : t.cta}
+                    </button>
                   </div>
                 </motion.article>
               );

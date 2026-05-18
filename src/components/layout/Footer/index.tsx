@@ -46,7 +46,7 @@ const Footer = () => {
               <div className="flex flex-col">
                 <Image
                   src="/logo/logo.svg"
-                  alt="Hanuman Gadhi"
+                  alt="Hanuman Gadi"
                   width={100}
                   height={100}
                   className="mb-4"
@@ -107,8 +107,8 @@ const Footer = () => {
                 <div className="space-y-3 text-xs md:text-sm">
                   <div className="flex items-start gap-2">
                     <span className="text-orange-600 mt-1">✉</span>
-                    <a href="mailto:info@hanumanagadhi.com" className="text-gray-700 hover:text-orange-600 transition">
-                      info@hanumanagadhi.com
+                    <a href="mailto:info@hanumanagadi.com" className="text-gray-700 hover:text-orange-600 transition">
+                      info@hanumanagadi.com
                     </a>
                   </div>
                   <div className="flex items-start gap-2">

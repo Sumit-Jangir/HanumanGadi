@@ -1,27 +1,38 @@
 "use client";
 
-import { useAppSelector } from "@/lib/hooks/redux";
-import { RootState } from "@/lib/store";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import { useCartStore } from "@/lib/stores/cartStore";
+import useAuthStore from "@/lib/stores/authStore";
 
 const CartBtn = () => {
-  const { cart } = useAppSelector((state: RootState) => state.carts);
+  const { totalQuantities, fetchCart } = useCartStore();
+  const { isLoggedIn } = useAuthStore();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchCart();
+    }
+  }, [isLoggedIn, fetchCart]);
 
   return (
-    <Link href="/cart" className="relative mr-[14px] p-1">
+    <Link
+      href="/cart"
+      className="relative flex items-center justify-center mr-3"
+    >
       <Image
         priority
         src="/icons/cart.svg"
-        height={100}
-        width={100}
+        height={22}
+        width={22}
         alt="cart"
-        className="max-w-[22px] max-h-[22px]"
+        className="object-contain"
       />
-      {cart && cart.totalQuantities > 0 && (
-        <span className="border bg-black text-white rounded-full w-fit-h-fit px-1 text-xs absolute -top-3 left-1/2 -translate-x-1/2">
-          {cart.totalQuantities}
+
+      {totalQuantities > 0 && (
+        <span className="absolute -top-4 -right-3 flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-[#61351E] px-1 text-[11px] font-semibold text-white">
+          {totalQuantities}
         </span>
       )}
     </Link>

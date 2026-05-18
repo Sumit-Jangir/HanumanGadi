@@ -74,13 +74,14 @@ const config: Config = {
           "5": "hsl(var(--chart-5))",
         },
         brand: {
-          orange:  "#ED940B", // primary CTA, accents, underlines
-          "orange-light": "#F5A832", // hover state
-          "orange-muted": "#FEF0DC", // light section backgrounds
-          brown:   "#5D1B03", // dark CTA buttons, footer
-          "brown-hover": "#7A2A08", // hover on brown buttons
-          cream:   "#FFF3E5", // page section backgrounds
-          "cream-dark": "#F5E6D0", // slightly deeper cream
+            orange: "#ED940B",
+          "orange-light": "#F5A832",
+          "orange-muted": "#FEF0DC",
+          brown: "#61341c",
+          "brown-hover": "#4d2816",
+          cream: "#f8e8dd",
+          "cream-dark": "#f5e0d2",
+          "page-bg": "#fdf8f2",
         },
       },
       keyframes: {

@@ -1,36 +1,36 @@
 "use client";
 
-import { addToCart } from "@/lib/features/carts/cartsSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { useAppSelector } from "@/lib/hooks/redux";
 import { RootState } from "@/lib/store";
 import { Product } from "@/types/product.types";
-import React from "react";
+import React, { useState } from "react";
+import useAuthStore from "@/lib/stores/authStore";
+import { useCartStore } from "@/lib/stores/cartStore";
 
 const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
-  const dispatch = useAppDispatch();
   const { sizeSelection, colorSelection } = useAppSelector(
     (state: RootState) => state.products
   );
+  const { isLoggedIn, openLogin } = useAuthStore();
+  const { addToCart } = useCartStore();
+  const [loading, setLoading] = useState(false);
 
   return (
     <button
       type="button"
-      className="bg-black w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base text-white hover:bg-black/80 transition-all"
-      onClick={() =>
-        dispatch(
-          addToCart({
-            id: data.id,
-            name: data.title,
-            srcUrl: data.srcUrl,
-            price: data.price,
-            attributes: [sizeSelection, colorSelection.name],
-            discount: data.discount,
-            quantity: data.quantity,
-          })
-        )
-      }
+      disabled={loading}
+      className="bg-black w-full ml-3 sm:ml-5 rounded-full h-11 md:h-[52px] text-sm sm:text-base text-white hover:bg-black/80 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+      onClick={async () => {
+        if (!isLoggedIn) {
+          openLogin();
+          return;
+        }
+        setLoading(true);
+        await addToCart(data.id.toString(), data.quantity.toString());
+        setLoading(false);
+      }}
     >
-      Add to Cart
+      {loading ? "Adding..." : "Add to Cart"}
     </button>
   );
 };
