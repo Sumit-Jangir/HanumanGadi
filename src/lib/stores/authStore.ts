@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { getStorage, setStorage, removeStorage } from '@/utils/storage';
 
 interface AuthState {
   isLoggedIn: boolean;
@@ -8,22 +9,31 @@ interface AuthState {
   logout: () => void;
   openLogin: () => void;
   closeLogin: () => void;
+  checkLoginStatus: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
-  isLoggedIn: typeof window !== 'undefined' ? !!localStorage.getItem('token') : false,
-  token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
+  isLoggedIn: typeof window !== 'undefined' ? !!getStorage('token') : false,
+  token: typeof window !== 'undefined' ? getStorage('token') : null,
   isLoginOpen: false,
   setToken: (token) => {
-    localStorage.setItem('token', token);
+    setStorage('token', token);
     set({ token, isLoggedIn: true });
   },
   logout: () => {
-    localStorage.removeItem('token');
+    removeStorage('token');
     set({ token: null, isLoggedIn: false });
   },
   openLogin: () => set({ isLoginOpen: true }),
   closeLogin: () => set({ isLoginOpen: false }),
+  checkLoginStatus: () => {
+    const token = getStorage('token');
+    if (token) {
+      set({ token, isLoggedIn: true });
+    } else {
+      set({ token: null, isLoggedIn: false });
+    }
+  }
 }));
 
 export default useAuthStore;

@@ -5,12 +5,14 @@ import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 import Image from "next/image";
-import axios from "axios";
 import { loginSchema } from "@/lib/validation";
 import useAuthStore from "@/lib/stores/authStore";
+import { loginApi } from "@/services/auth";
+import { useCartStore } from "@/lib/stores/cartStore";
 
 const LoginModal = () => {
   const { isLoginOpen, closeLogin, setToken } = useAuthStore();
+  const { fetchCart } = useCartStore();
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -28,22 +30,14 @@ const LoginModal = () => {
       setErrorMsg("");
       setSuccessMsg("");
       try {
-        const formData = new FormData();
-        formData.append("mobile", values.mobile);
+        const response: any = await loginApi(values.mobile);
 
-        const response = await axios.post(
-          "https://hanumangadi.com/hanumangadi/api1/loginAuthH",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        if (response.data?.status) {
-          setSuccessMsg(response.data.msg || "Logged in successfully!");
-          setToken(response.data.data);
+        if (response?.status) {
+          setSuccessMsg(response.msg || "Logged in successfully!");
+          setToken(response.data);
+          
+          // Fetch cart data after successful login
+          await fetchCart();
 
           setTimeout(() => {
             closeLogin();
@@ -51,10 +45,10 @@ const LoginModal = () => {
             formik.resetForm();
           }, 1500);
         } else {
-          setErrorMsg(response.data?.msg || "Login failed. Please try again.");
+          setErrorMsg(response?.msg || "Login failed. Please try again.");
         }
       } catch (err: any) {
-        setErrorMsg(err?.response?.data?.msg || "An error occurred. Please try again.");
+        setErrorMsg(err?.response?.message || err?.message || "An error occurred. Please try again.");
       } finally {
         setSubmitting(false);
       }
@@ -92,7 +86,7 @@ const LoginModal = () => {
             </button>
 
             {/* Left Form Section */}
-            <div className="flex w-full flex-col justify-center bg-[#f8e8dd] p-6 md:p-20 md:w-[60%] relative z-10">
+            <div className="theme-surface flex w-full flex-col justify-center p-6 md:p-20 md:w-[60%] relative z-10">
               <div className="flex flex-col items-center justify-center mb-8 md:text-left">
                 <div className="mb-6 flex justify-center md:justify-start">
                   <Image
@@ -121,7 +115,7 @@ const LoginModal = () => {
                       placeholder="Enter mobile number"
                       className={`w-full rounded-xl border bg-gray-50 py-3.5 pl-12 pr-4 text-gray-900 outline-none transition-all focus:bg-white focus:ring-2 ${formik.touched.mobile && formik.errors.mobile
                         ? "border-red-500 focus:ring-red-200"
-                        : "border-[#61341c] focus:border-[#ed940b] focus:ring-[#ed940b]/20"
+                        : "border-brand-brown focus:border-brand-orange focus:ring-brand-orange/20"
                         }`}
                       onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, ""); // remove non-numbers

@@ -8,14 +8,16 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 
-  /* Brand palette — Hanuman Gadi */
+  /* Brand palette — Hanuman Gadi (aligned with LoginModal) */
   --brand-orange: #ED940B;
   --brand-orange-light: #F5A832;
   --brand-orange-muted: #FEF0DC;
-  --brand-brown: #c77232;
-  --brand-brown-hover: #7A2A08;
-  --brand-cream: #FFF3E5;
-  --brand-cream-dark: #F5E6D0;
+  --brand-brown: #61341c;
+  --brand-brown-hover: #4d2816;
+  --brand-cream: #f8e8dd;
+  --brand-cream-dark: #f5e0d2;
+  --brand-page-bg: #fdf8f2;
+  --brand-border: #61341c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,12 +41,34 @@
     transition: background-position 0.6s ease;
   } */
   .btn-gradient-slide {
-  @apply rounded-xl bg-gradient-to-r from-[#5a2f1a] via-[#74442a] to-[#8a5636] bg-[length:200%_200%] px-6 py-3.5 font-semibold text-white shadow-lg transition-all duration-500 hover:from-[#4d2816] hover:via-[#663b24] hover:to-[#7a4b2f] hover:shadow-2xl hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100;
-}
+    @apply rounded-xl px-6 py-3.5 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none disabled:active:scale-100;
+    background: linear-gradient(
+      to right,
+      var(--brand-brown),
+      #74442a,
+      var(--brand-brown)
+    );
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+  }
 
-  /* .btn-gradient-slide:hover {
+  .btn-gradient-slide:hover {
     background-position: 100% 0%;
-  } */
+    background-color: var(--brand-brown-hover);
+  }
+
+  .theme-page {
+    background-color: var(--brand-page-bg);
+  }
+
+  .theme-surface {
+    background-color: var(--brand-cream);
+  }
+
+  .theme-card {
+    @apply rounded-3xl border bg-white/95 shadow-xl;
+    border-color: color-mix(in srgb, var(--brand-brown) 12%, transparent);
+  }
 }
 
 @layer base {

@@ -125,7 +125,7 @@ export default function AboutUsPage() {
   const t = content[language];
 
   return (
-    <div className="max-w-[1900px] mx-auto bg-[#fdf8f2] overflow-x-hidden">
+    <div className="max-w-[1900px] mx-auto bg-[#f8e8dd] overflow-x-hidden">
 
       {/* ══════════ HERO BANNER ══════════ */}
       <section className="w-full">
@@ -160,7 +160,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* ══════════ SECTION 1 — Mission ══════════ */}
-      <section className="py-12 px-4 max-w-6xl mx-auto">
+      <section className="pb-0 sm:py-12 px-4 max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-12">
           {/* Image */}
           <motion.div
@@ -218,7 +218,7 @@ export default function AboutUsPage() {
       <OrnamentDivider />
 
       {/* ══════════ SECTION 2 — Renowned Astrologer ══════════ */}
-      <section className="py-20 px-4 bg-gradient-to-br from-orange-50 via-amber-50 to-orange-50">
+      <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row-reverse items-center gap-12">
           {/* Image */}
           <motion.div

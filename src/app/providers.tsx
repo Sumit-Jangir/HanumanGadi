@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { makeStore } from "../lib/store";
 import { PersistGate } from "redux-persist/integration/react";
 import SpinnerbLoader from "@/components/ui/SpinnerbLoader";
+import useAuthStore from "@/lib/stores/authStore";
 
 type Props = {
   children: React.ReactNode;
@@ -12,6 +13,11 @@ type Props = {
 
 const Providers = ({ children }: Props) => {
   const { store, persistor } = makeStore();
+  const { checkLoginStatus } = useAuthStore();
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, [checkLoginStatus]);
 
   return (
     <Provider store={store}>
