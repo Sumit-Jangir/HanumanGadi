@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import { integralCF } from "@/styles/fonts";
 import React from "react";
@@ -28,147 +29,201 @@ const socialsData: SocialNetworks[] = [
 
 const Footer = () => {
   const language = useLanguageStore((state) => state.language);
+
   return (
     <footer>
-      <div className="relative w-full bg-cover bg-top" style={{
-        backgroundImage: "url('/banners/footer-bg.png')",
-        backgroundColor: "#F5E6D3"
-      }}>
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[rgba(147,133,113,0.4)] to-transparent"></div>
-        
+      <div
+        className="
+      relative
+      overflow-hidden
+      backdrop-blur-md
+    "
+        style={{
+          background:
+            "linear-gradient(to right, rgba(255,243,229,0.95), var(--brand-orange))",
+          boxShadow: "0 -4px 20px rgba(0,0,0,0.08)",
+        }}
+      >
         {/* Content */}
         <div className="relative z-10 px-4 py-12 md:py-16">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-              
-              {/* Logo and Address Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+              {/* Logo and Address */}
               <div className="flex flex-col">
-                <Image
-                  src="/logo/logo.svg"
-                  alt="Hanuman Gadi"
-                  width={100}
-                  height={100}
-                  className="mb-4"
-                  priority
-                />
-                <p className="text-xs md:text-sm text-gray-700 leading-relaxed font-medium">
+                <div className="inline-block rounded-2xl bg-white/35 backdrop-blur-sm px-4 py-3 w-fit border border-white/40 shadow-md">
+                  <Image
+                    src="/logo/logo.svg"
+                    alt="Hanuman Gadi"
+                    width={110}
+                    height={110}
+                    className="drop-shadow-sm"
+                    priority
+                  />
+                </div>
+
+                <p className="text-sm md:text-[15px] text-[#2f1a0d] leading-8 font-semibold mt-5">
                   {language === "hi" ? (
                     <>
-                      श्री रामसत्संग भवन<br />
-                      छोटी छावनी, अयोध्या<br />
+                      श्री रामसत्संग भवन
+                      <br />
+                      छोटी छावनी, अयोध्या
+                      <br />
                       224001
                     </>
                   ) : (
                     <>
-                      Shri Ram Satsang Bhavan<br />
-                      Choti Chawni, Ayodhya<br />
+                      Shri Ram Satsang Bhavan
+                      <br />
+                      Choti Chawni, Ayodhya
+                      <br />
                       224001
                     </>
                   )}
                 </p>
               </div>
 
-              {/* Information Section */}
+              {/* Information */}
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-4">Information</h3>
-                <ul className="space-y-2 text-xs md:text-sm">
-                  <li>
-                    <Link href="#" className="text-gray-700 hover:text-orange-600 transition">
-                      About us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-700 hover:text-orange-600 transition">
-                      Contact us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-700 hover:text-orange-600 transition">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-700 hover:text-orange-600 transition">
-                      Terms & Conditions
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-700 hover:text-orange-600 transition">
-                      Return & Refund Policy
-                    </Link>
-                  </li>
+                <h3 className="text-lg font-bold text-[#2f1a0d] mb-5 tracking-wide">
+                  Information
+                </h3>
+
+                <ul className="space-y-3 text-sm md:text-[15px]">
+                  {[
+                    "About us",
+                    "Contact us",
+                    "Privacy Policy",
+                    "Terms & Conditions",
+                    "Return & Refund Policy",
+                  ].map((item) => (
+                    <li key={item}>
+                      <Link
+                        href="#"
+                        className="
+                      text-[#3b220f]
+                      hover:text-[#f28c18]
+                      transition-all
+                      duration-300
+                      hover:translate-x-1
+                      inline-flex
+                      font-medium
+                    "
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
-              {/* Helpful Section */}
+              {/* Helpful */}
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-4">Helpful</h3>
-                <div className="space-y-3 text-xs md:text-sm">
-                  <div className="flex items-start gap-2">
-                    <span className="text-orange-600 mt-1">✉</span>
-                    <a href="mailto:info@hanumanagadi.com" className="text-gray-700 hover:text-orange-600 transition">
+                <h3 className="text-lg font-bold text-[#2f1a0d] mb-5 tracking-wide">
+                  Helpful
+                </h3>
+
+                <div className="space-y-4 text-sm md:text-[15px]">
+                  <div className="flex items-start gap-3">
+                    <span className="text-[#f28c18] mt-1">✉</span>
+
+                    <a
+                      href="mailto:info@hanumanagadi.com"
+                      className="
+                    text-[#3b220f]
+                    hover:text-[#f28c18]
+                    transition
+                    font-medium
+                  "
+                    >
                       info@hanumanagadi.com
                     </a>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-orange-600 mt-1">📍</span>
-                    <a href="tel:+919876543210" className="text-gray-700 hover:text-orange-600 transition">
+
+                  <div className="flex items-start gap-3">
+                    <span className="text-[#f28c18] mt-1">📞</span>
+
+                    <a
+                      href="tel:+919876543210"
+                      className="
+                    text-[#3b220f]
+                    hover:text-[#f28c18]
+                    transition
+                    font-medium
+                  "
+                    >
                       +91 9876543210
                     </a>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-orange-600 mt-1">📍</span>
-                    <p className="text-gray-700">
-                      Shri Ram Satsang Bhavan<br />
-                      Choti Chawni, Ayodhya<br />
+
+                  <div className="flex items-start gap-3">
+                    <span className="text-[#f28c18] mt-1">📍</span>
+
+                    <p className="text-[#3b220f] leading-7 font-medium">
+                      Shri Ram Satsang Bhavan
+                      <br />
+                      Choti Chawni, Ayodhya
+                      <br />
                       224001
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Get Your App Section */}
+              {/* App Section */}
               <div>
-                <h3 className="text-sm font-bold text-gray-900 mb-4">Get Your App<br /><span className="text-xs font-normal">Download from here!</span></h3>
-                <div className="space-y-3">
-                  {/* <Link href="#" className="flex items-center gap-2 bg-white px-3 py-2 rounded border border-gray-300 hover:border-orange-600 transition w-fit">
-                    <span className="text-xl">🍎</span>
-                    <div>
-                      <div className="text-xs text-gray-600">Download on</div>
-                      <div className="text-sm font-bold text-gray-900">App Store</div>
-                    </div>
-                  </Link>
-                  <Link href="#" className="flex items-center gap-2 bg-white px-3 py-2 rounded border border-gray-300 hover:border-orange-600 transition w-fit">
-                    <span className="text-xl">🎮</span>
-                    <div>
-                      <div className="text-xs text-gray-600">Get it on</div>
-                      <div className="text-sm font-bold text-gray-900">Google Play</div>
-                    </div>
-                  </Link> */}
-                  Todo -Image for app store and play store
+                <h3 className="text-lg font-bold text-[#2f1a0d] mb-2 tracking-wide">
+                  Get Your App
+                </h3>
+
+                <p className="text-sm text-[#3b220f] mb-5 font-medium">
+                  Download from here!
+                </p>
+
+                <div className="space-y-3 text-sm md:text-[15px] text-[#3b220f] font-medium">
+                  Todo - Image for App Store and Play Store
                 </div>
               </div>
-
             </div>
 
             {/* Divider */}
-            <hr className="border-t border-gray-400 mb-6" />
+            <hr className="border-t border-[#8d5a2c]/25 mb-6" />
 
-            {/* Bottom Section */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-xs text-gray-700 text-center md:text-left">
+            {/* Bottom */}
+            <div className="flex flex-col md:flex-row justify-between items-center gap-5">
+              <p className="text-xs md:text-sm text-[#2f1a0d] text-center md:text-left font-semibold">
                 © Copyright hanumangadhi. All Rights Reserved
               </p>
-              
+
               {/* Social Icons */}
               <div className="flex items-center gap-4">
-                <span className="text-xs text-gray-700">Follow us :</span>
+                <span className="text-sm text-[#2f1a0d] font-semibold">
+                  Follow us :
+                </span>
+
                 {socialsData.map((social) => (
                   <Link
                     href={social.url}
                     key={social.id}
-                    className="bg-white hover:bg-orange-600 hover:text-white transition-all w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700"
+                    className="
+                  bg-white/25
+                  hover:bg-[#f28c18]
+                  hover:text-white
+                  transition-all
+                  duration-300
+                  w-10
+                  h-10
+                  rounded-full
+                  border
+                  border-white/40
+                  flex
+                  items-center
+                  justify-center
+                  text-[#2f1a0d]
+                  hover:-translate-y-1
+                  hover:shadow-[0_8px_20px_rgba(242,140,24,0.35)]
+                  backdrop-blur-sm
+                "
                   >
                     {social.icon}
                   </Link>

@@ -180,7 +180,7 @@ const ProductByIdPage = () => {
     };
 
     return (
-        <div className="theme-page max-w-6xl mx-auto px-4 md:px-6 py-10 min-h-screen">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 min-h-screen">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {/* LEFT SIDE */}
                 <div>
@@ -200,7 +200,7 @@ const ProductByIdPage = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 1.08 }}
                                     transition={{ duration: 0.35 }}
-                                    className="w-full h-full flex items-center justify-center p-6"
+                                    className="w-full h-full bg-white flex items-center justify-center p-6"
                                 >
                                     <Image
                                         src={selectedImage}
