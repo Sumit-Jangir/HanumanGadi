@@ -61,7 +61,9 @@ const TopNavbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -81,15 +83,19 @@ const TopNavbar = () => {
       }}
     >
       <motion.div
-        animate={{ paddingTop: scrolled ? "10px" : undefined, paddingBottom: scrolled ? "10px" : undefined }}
+        animate={{
+          paddingTop: scrolled ? "10px" : undefined,
+          paddingBottom: scrolled ? "10px" : undefined,
+        }}
         transition={{ duration: 0.3 }}
         className="flex relative max-w-frame mx-auto items-center justify-between py-4 md:py-5 px-4 xl:px-0"
       >
-        {/* Logo */}
+        {/* Left */}
         <div className="flex items-center">
           <div className="block md:hidden mr-4">
             <ResTopNavbar data={data} />
           </div>
+
           <Link href="/" className="flex items-center mr-6 lg:mr-10">
             <Image
               priority
@@ -102,7 +108,7 @@ const TopNavbar = () => {
           </Link>
         </div>
 
-        {/* Desktop nav links */}
+        {/* Desktop Menu */}
         <NavigationMenu className="hidden md:flex flex-1 justify-center mr-4">
           <NavigationMenuList>
             {data.map((item, i) => (
@@ -111,7 +117,12 @@ const TopNavbar = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.07, type: "spring", stiffness: 300, damping: 24 }}
+                    transition={{
+                      delay: i * 0.07,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 24,
+                    }}
                   >
                     <MenuItem label={item.label} url={item.url} />
                   </motion.div>
@@ -121,7 +132,7 @@ const TopNavbar = () => {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Right actions */}
+        {/* Right Actions */}
         <div className="flex items-center gap-1 ml-auto md:ml-0">
           {/* Mobile search icon */}
           {/* <Link href="/search" className="block md:hidden mr-2 p-1">
@@ -134,10 +145,8 @@ const TopNavbar = () => {
             />
           </Link> */}
 
-          {/* Cart */}
           <CartBtn />
 
-          {/* Language switcher */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -151,8 +160,10 @@ const TopNavbar = () => {
             </span>
           </motion.button>
 
-          {/* User menu */}
-          <UserMenuBtn />
+          {/* Hide user menu on mobile because it is now inside side menu */}
+          <div className="hidden md:block">
+            <UserMenuBtn />
+          </div>
         </div>
       </motion.div>
     </motion.nav>

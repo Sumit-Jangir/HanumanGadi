@@ -173,7 +173,7 @@ export default function AboutUsPage() {
           >
             <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-orange-300 to-amber-200 blur-xl opacity-40 -z-10" />
             <Image
-              src="/banners/banner1.png"
+              src="/images/about1.png"
               alt="Hanumangadi Team"
               width={420}
               height={420}
@@ -231,7 +231,7 @@ export default function AboutUsPage() {
           >
             <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-amber-300 to-orange-200 blur-xl opacity-40 -z-10" />
             <Image
-              src="/banners/banner2.png"
+              src="/images/about2.png"
               alt="Renowned Astrologer"
               width={420}
               height={420}
