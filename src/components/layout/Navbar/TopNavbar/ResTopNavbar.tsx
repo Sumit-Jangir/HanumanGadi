@@ -31,11 +31,11 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
               <Link href="/" className="flex items-center">
                 <Image
                   priority
-                  src="/images/logo.png"
-                  height={44}
-                  width={44}
+                  src="/logo/logo.svg"
+                  height={52}
+                  width={52}
                   alt="logo"
-                  className="h-11 w-auto"
+                  className="w-auto"
                 />
               </Link>
             </SheetClose>
@@ -49,7 +49,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
               </Link>
             </SheetClose>
           ))}
-          <div className="mt-4 pt-4 border-t w-full">
+          {/* <div className="mt-4 pt-4 border-t w-full">
             <SheetClose asChild>
               <Link
                 href="/signin"
@@ -66,7 +66,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
                 Login
               </Link>
             </SheetClose>
-          </div>
+          </div> */}
         </div>
       </SheetContent>
     </Sheet>

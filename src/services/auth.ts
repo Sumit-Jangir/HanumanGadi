@@ -1,10 +1,23 @@
-import { apiPost } from "@/utils/api";
+import { fetcher } from "@/utils/api";
 
-export const loginApi = async (mobile: string) => {
+const LOGIN_API = "/api/login";
+
+type LoginResponse = {
+  status: boolean;
+  msg: string;
+  // Add other fields if needed
+};
+
+export const loginApi = async (mobile: string): Promise<LoginResponse> => {
   const formData = new FormData();
   formData.append("mobile", mobile);
 
-  return apiPost("/loginAuthH", formData, {
-    "Content-Type": "multipart/form-data",
+  const response = await fetcher<LoginResponse>(LOGIN_API, {
+    method: "POST",
+    data: formData,
   });
+
+  return {
+    ...response,
+  };
 };

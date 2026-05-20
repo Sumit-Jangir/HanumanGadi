@@ -124,7 +124,7 @@ const TopNavbar = () => {
         {/* Right actions */}
         <div className="flex items-center gap-1 ml-auto md:ml-0">
           {/* Mobile search icon */}
-          <Link href="/search" className="block md:hidden mr-2 p-1">
+          {/* <Link href="/search" className="block md:hidden mr-2 p-1">
             <Image
               priority
               src="/icons/search-black.svg"
@@ -132,7 +132,7 @@ const TopNavbar = () => {
               width={22}
               alt="search"
             />
-          </Link>
+          </Link> */}
 
           {/* Cart */}
           <CartBtn />
@@ -146,7 +146,7 @@ const TopNavbar = () => {
             aria-label="Switch language"
           >
             <Languages size={15} strokeWidth={1.8} />
-            <span className="hidden sm:inline text-xs tracking-wide uppercase">
+            <span className="inline text-xs tracking-wide uppercase">
               {language}
             </span>
           </motion.button>
