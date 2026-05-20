@@ -26,14 +26,14 @@ export default function RootLayout({
       <body className={satoshi.className}>
         <HolyLoader color="#ed940b" />
         {/* <TopBanner /> */}
-          <div className="max-w-[1920px] mx-auto bg-[#f8e8dd]">
-        <Providers>
-          <TopNavbar />
-          {children}
-        </Providers>
-        <LoginModal />
-        <Footer />
-          </div>
+        <div className="max-w-[1920px] mx-auto bg-[#f8e8dd]">
+          <Providers>
+            <TopNavbar />
+            {children}
+            <Footer />
+          </Providers>
+          <LoginModal />
+        </div>
       </body>
     </html>
   );

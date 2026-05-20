@@ -51,15 +51,28 @@ export default function ShopPage() {
   const { addToCart } = useCartStore();
   const [addingId, setAddingId] = useState<string | null>(null);
 
-  const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>, item: HomeProduct) => {
+  const handleAddToCart = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: HomeProduct
+  ) => {
     e.preventDefault();
+    e.stopPropagation();
+
     if (!isLoggedIn) {
       openLogin();
       return;
     }
-    setAddingId(item?.slug.toString());
-    await addToCart(item?.slug.toString(), "1");
-    setAddingId(null);
+
+    const productId = item?.slug;
+
+    try {
+      setAddingId(productId);
+      await addToCart(productId, "1");
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+    } finally {
+      setAddingId(null);
+    }
   };
 
   useEffect(() => {
@@ -152,6 +165,7 @@ export default function ShopPage() {
                     y: -10,
                     scale: 1.02,
                   }}
+                  onClick={() => window.location.href = `/shop/product/${item.slug}`}
                   className="
                           group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] xs:min-w-[365px] sm:min-w-[400px]
                           overflow-hidden rounded-2xl
@@ -167,13 +181,13 @@ export default function ShopPage() {
                           before:transition-all before:duration-500
                           hover:bg-[#fffdfb]
                           "                >
-                  <div className="relative -mt-7 pt-3 h-[380px] md:h-[400px] overflow-hidden">                  
+                  <div className="relative -mt-7 pt-3 h-[380px] md:h-[400px] overflow-hidden">
                     <img
-                    src={imageSrc}
-                    alt={title || "Product image"}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
-                  />
+                      src={imageSrc}
+                      alt={title || "Product image"}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                    />
 
                     {/* Gradient Overlay */}
                     {/* <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" /> */}
