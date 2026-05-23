@@ -134,7 +134,6 @@ const TopNavbar = () => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-1 ml-auto md:ml-0">
-          {/* Mobile search icon */}
           {/* <Link href="/search" className="block md:hidden mr-2 p-1">
             <Image
               priority

@@ -123,10 +123,9 @@ function Field({
         rows={as === "textarea" ? 4 : undefined}
         className={`w-full px-4 py-3 rounded-xl bg-white/80 border text-gray-800 placeholder-gray-400 text-sm outline-none transition-all duration-200
           focus:ring-2 focus:ring-orange-400 focus:border-orange-400
-          ${
-            showError
-              ? "border-red-400 ring-1 ring-red-300"
-              : "border-gray-200"
+          ${showError
+            ? "border-red-400 ring-1 ring-red-300"
+            : "border-gray-200"
           }
           ${as === "textarea" ? "resize-none" : ""}
         `}
@@ -193,7 +192,7 @@ export default function ContactUsPage() {
   });
 
   return (
-    <div className="bg-[#fdf8f2] overflow-x-hidden">
+    <div className="theme-page max-w-[1920px] mx-auto overflow-x-hidden bg-[#fdf8f2]">
       {/* ══════════ HERO BANNER ══════════ */}
       <section className="w-full p-3 pb-0 sm:p-0 md:p-0">
         <div className="w-full h-auto rounded-2xl md:rounded-none overflow-hidden">
@@ -212,16 +211,18 @@ export default function ContactUsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center py-8 px-4"
+          className="text-center pt-12 px-4"
         >
-          <h1 className="text-xl md:text-2xl font-bold tracking-widest text-[#7b1c1c] uppercase">
+          <h1 className="text-xl md:text-2xl font-bold tracking-widest text-brand-brown uppercase">
             {t.pageHeading}
           </h1>
+
+          <div className="mt-4 mx-auto h-[3px] w-16 rounded-full bg-[#7a4326]" />
         </motion.div>
       </section>
 
       {/* ══════════ CONTACT BODY ══════════ */}
-      <section className="pb-0 sm:py-12 px-4 max-w-6xl mx-auto ">
+      <section className="pb-0 sm:py-12 px-4 max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* ── Form Card ── */}
           <motion.div
@@ -232,18 +233,16 @@ export default function ContactUsPage() {
           >
             {/* Glowing bg */}
             <div className="relative">
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-orange-300 to-amber-200 blur-2xl opacity-30 -z-10" />
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#d8b08c] to-[#f3e7dc] blur-2xl opacity-40 -z-10" />
 
-              <div className="bg-white/90 backdrop-blur-sm border border-orange-100 rounded-3xl shadow-2xl p-8 md:p-10">
+              <div className="bg-white/95 backdrop-blur-sm border border-[#e7c9a6] rounded-3xl shadow-2xl p-6 hover:border-[#8b5a3c] transition-all duration-300">
                 {/* Form header */}
                 <div className="mb-7">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-brand-brown">
                     {t.formTitle}
                   </h2>
 
-                  {/* <p className="text-sm text-gray-500 mt-1">{t.formSubtitle}</p> */}
-
-                  <div className="mt-3 h-[3px] w-14 rounded-full bg-gradient-to-r from-orange-500 to-amber-400" />
+                  <div className="mt-3 h-[3px] w-14 rounded-full bg-[#7a4326]" />
                 </div>
 
                 {/* Success state */}
@@ -329,12 +328,7 @@ export default function ContactUsPage() {
                     disabled={formik.isSubmitting}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
-                    className="w-full mt-2 py-3.5 rounded-xl font-bold text-white text-sm tracking-wide
-                      bg-gradient-to-r from-orange-600 to-orange-500
-                      hover:from-orange-700 hover:to-orange-600
-                      shadow-lg shadow-orange-200
-                      transition-all duration-200
-                      disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full mt-2 btn-gradient-slide inline-flex items-center justify-center py-3.5 rounded-xl font-bold text-white text-sm tracking-wide transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {formik.isSubmitting ? t.submitting : t.submitBtn}
                   </motion.button>
@@ -348,19 +342,19 @@ export default function ContactUsPage() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="w-full lg:w-[360px] space-y-6"
+            className="w-full lg:w-[360px] space-y-7 mb-7 "
           >
             {/* Address */}
-            <div className="bg-white/90 backdrop-blur-sm border border-orange-100 rounded-3xl shadow-xl p-7">
+            <div className="bg-white/95 backdrop-blur-sm border border-[#e7c9a6] rounded-3xl shadow-xl p-7 hover:border-[#8b5a3c] transition-all duration-300">
               <div className="flex items-center gap-2 mb-3">
-                <FaMapMarkerAlt className="text-orange-500 text-lg" />
+                <FaMapMarkerAlt className="text-[#7a4326] text-lg" />
 
-                <p className="text-xs font-bold uppercase tracking-widest text-orange-500">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#7a4326]">
                   {t.addressLabel}
                 </p>
               </div>
 
-              <p className="text-base font-bold text-orange-600 mb-1">
+              <p className="text-base font-bold text-brand-brown mb-1">
                 {t.orgName}
               </p>
 
@@ -372,68 +366,96 @@ export default function ContactUsPage() {
             </div>
 
             {/* Contact Details */}
-            <div className="bg-white/90 backdrop-blur-sm border border-orange-100 rounded-3xl shadow-xl p-7">
+            <div className="bg-white/95 backdrop-blur-sm border border-[#e7c9a6] rounded-3xl shadow-xl p-7 hover:border-[#8b5a3c] transition-all duration-300">
               <div className="flex items-center gap-2 mb-3">
-                <FaPhone className="text-orange-500 text-base" />
+                <FaPhone className="text-[#7a4326] text-base" />
 
-                <p className="text-xs font-bold uppercase tracking-widest text-orange-500">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#7a4326]">
                   {t.contactLabel}
                 </p>
               </div>
 
               <div className="space-y-2 text-sm text-gray-700">
                 <div className="flex items-center gap-2">
-                  <FaPhone className="text-orange-400 text-xs" />
+                  <FaPhone className="text-[#7a4326] text-xs" />
                   <span>(+91) 8239455455</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <FaEnvelope className="text-orange-400 text-xs" />
+                  <FaEnvelope className="text-[#7a4326] text-xs" />
                   <span>hanumangadiayodhya@gmail.com</span>
                 </div>
               </div>
             </div>
 
             {/* Social Media */}
-            <div className="bg-white/90 backdrop-blur-sm border border-orange-100 rounded-3xl shadow-xl p-7">
-              <p className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-4">
+            <div className="bg-white/95 backdrop-blur-sm border border-[#e7c9a6] rounded-3xl shadow-xl p-7 hover:border-[#8b5a3c] transition-all duration-300">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#7a4326] mb-4">
                 {t.socialLabel}
               </p>
 
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-4">
                 {[
                   {
                     icon: FaFacebookF,
                     href: "#",
-                    color: "bg-[#1877f2]",
+                    label: "Facebook",
                   },
                   {
                     icon: FaTwitter,
                     href: "#",
-                    color: "bg-[#1da1f2]",
+                    label: "Twitter",
                   },
                   {
                     icon: FaInstagram,
                     href: "#",
-                    color:
-                      "bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af]",
+                    label: "Instagram",
                   },
                   {
                     icon: FaYoutube,
                     href: "#",
-                    color: "bg-[#ff0000]",
+                    label: "YouTube",
                   },
-                ].map(({ icon: Icon, href, color }) => (
+                ].map(({ icon: Icon, href, label }) => (
                   <motion.a
-                    key={href + color}
+                    key={label}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ y: -4, scale: 1.1 }}
+                    whileHover={{ y: -5, scale: 1.08 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm shadow-md ${color}`}
+                    className="
+                        group relative overflow-hidden
+                        w-11 h-11 rounded-2xl
+                        flex items-center justify-center
+                        border border-[#d9b99b]
+                        bg-gradient-to-br from-[#fffaf6] to-[#f3e7dc]
+                        text-[#7a4326]
+                        shadow-md
+                        hover:shadow-xl
+                        hover:border-[#8b5a3c]
+                        transition-all duration-300
+                      "
                   >
-                    <Icon />
+                    {/* Glow Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#8b5a3c]/10 to-[#7a4326]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    {/* Icon */}
+                    <Icon className="relative z-10 text-[16px] transition-transform duration-300 group-hover:scale-110" />
+
+                    {/* Tooltip */}
+                    <span
+                      className="
+                        absolute -bottom-8 left-1/2 -translate-x-1/2
+                        whitespace-nowrap rounded-md
+                        bg-[#5c2f1b] text-white text-[10px]
+                        px-2 py-1 opacity-0
+                        group-hover:opacity-100
+                        transition-all duration-300
+                      "
+                    >
+                      {label}
+                    </span>
                   </motion.a>
                 ))}
               </div>
