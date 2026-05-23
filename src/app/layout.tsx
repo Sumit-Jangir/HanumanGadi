@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={satoshi.className}>
-        <HolyLoader color="#ed940b" />
+        <HolyLoader color="#61341C" />
         {/* <TopBanner /> */}
         <div className="max-w-[1920px] mx-auto bg-[#f8e8dd]">
           <Providers>

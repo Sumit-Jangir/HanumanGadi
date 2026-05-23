@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useLanguageStore } from "@/lib/stores/languageStore";
+import { FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 
 /* ─── Bilingual Content ───────────────────────────────────────────── */
 const content = {
@@ -93,7 +94,7 @@ function OrnamentDivider() {
   return (
     <div className="flex items-center justify-center gap-3 my-2">
       <motion.span
-        className="h-[2px] sm:h-[3px] w-32 sm:w-64 bg-gradient-to-r from-transparent to-orange-400 rounded-full"
+        className="h-[2px] sm:h-[3px] w-32 sm:w-64 bg-gradient-to-r from-transparent to-[#7b1c1c] rounded-full"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -101,14 +102,14 @@ function OrnamentDivider() {
         style={{ transformOrigin: "right" }}
       />
       <motion.span
-        className="font-extrabold text-orange-500 text-xl"
+        className="font-extrabold text-[#7b1c1c] text-xl"
         animate={{ rotate: [0, 360] }}
         transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
       >
         ✦
       </motion.span>
       <motion.span
-        className="h-[2px] sm:h-[3px] w-32 sm:w-64 bg-gradient-to-l from-transparent to-orange-400 rounded-full"
+        className="h-[2px] sm:h-[3px] w-32 sm:w-64 bg-gradient-to-l from-transparent to-[#7b1c1c] rounded-full"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -149,7 +150,7 @@ export default function AboutUsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center py-8 px-4"
+          className="text-center pt-12 px-4"
         >
           <h1 className="text-xl md:text-2xl font-bold tracking-widest text-[#7b1c1c] uppercase">
             {t.welcomeHeading[0]}
@@ -324,8 +325,24 @@ export default function AboutUsPage() {
                   <br />
                   {t.address[1]}
                 </p>
-                <p className="opacity-80">📞 +91 8239455455</p>
-                <p className="opacity-80">✉ hanumangadiayodhya@gmail.com</p>
+                <div className="flex items-start gap-3">
+                  <FaPhoneAlt className="mt-1 shrink-0" />
+                  <a
+                    href="tel:+919876543210"
+                    className="text-white "
+                  >
+                    +91 9876543210
+                  </a>
+                </div>
+                <div className="flex items-start gap-3">
+                  <FaEnvelope className="mt-1.5 shrink-0" />
+                  <a
+                    href="mailto:hanumangadiayodhya@gmail.com"
+                    className="text-white"
+                  >
+                    hanumangadiayodhya@gmail.com
+                  </a>
+                </div>
               </div>
             </motion.div>
           </div>
