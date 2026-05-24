@@ -1,6 +1,5 @@
 import { apiGet } from "@/utils/api";
 
-
 export type GalleryVideo = {
   title: string;
   url: string;
