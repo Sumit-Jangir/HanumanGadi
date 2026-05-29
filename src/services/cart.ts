@@ -5,7 +5,7 @@ export const addToCartApi = async (userId: string, productId: string, qty: strin
   formData.append("user_id", userId);
   formData.append("product_id", productId);
   formData.append("flag", "1");
-  formData.append("qty", "3");
+  formData.append("qty", qty);
 
   return apiPost("/addToCart", formData, {
     "Content-Type": "multipart/form-data",

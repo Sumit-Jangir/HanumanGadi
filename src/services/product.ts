@@ -66,12 +66,14 @@ export const getProducts = async (): Promise<HomeProduct[]> => {
   return (response.data || []).map(toHomeProduct);
 };
 
-export const getYagyaProducts = async (): Promise<HomeProduct[]> => {
-  const response = await apiGet<ApiBaseResponse<RawProductItem>>(YAGYA_API);
-  return (response.data || []).map(toHomeProduct);
-};
+// export const getYagyaProducts = async (): Promise<HomeProduct[]> => {
+//   const response = await apiGet<ApiBaseResponse<RawProductItem>>("/get_yagya");
+//   return (response.data || []).map(toHomeProduct);
+// };
 
 export const getHomeServices = async (): Promise<HomeProduct[]> => {
-  const [products, yagya] = await Promise.all([getProducts(), getYagyaProducts()]);
-  return [...products, ...yagya];
+  // const [products, yagya] = await Promise.all([getProducts(), getYagyaProducts()]);
+  const [products] = await Promise.all([getProducts()]);
+  // return [...products, ...yagya];
+  return [...products];
 };
