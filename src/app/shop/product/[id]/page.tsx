@@ -458,7 +458,7 @@ const ProductByIdPage = () => {
                 <div className="hidden md:block">
                     {/* INTERACTIVE TAB BAR */}
                     <div className="bg-white/60 backdrop-blur-md rounded-2xl p-2 shadow-sm border border-brand-brown/10 mb-8">
-                        <div className={`grid gap-2 grid-cols-${TABS.length}`}>
+                        <div className={`grid gap-2 ${isYagya ? "grid-cols-3" : `grid-cols-4`}`}>
                             {TABS.map((t) => (
                                 <button
                                     type="button"
