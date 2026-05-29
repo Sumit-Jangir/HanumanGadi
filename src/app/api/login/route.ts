@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const LOGIN_TARGET_URL = "https://hanumangadi.com/hanumangadi/api1/loginAuthH";
+const LOGIN_TARGET_URL = "https://hanumangadi.com/hanumangadi/demoapi/loginAuthH";
 
 export async function POST(request: NextRequest) {
   try {

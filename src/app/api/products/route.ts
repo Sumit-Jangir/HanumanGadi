@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const TARGET_URL = "https://hanumangadi.com/hanumangadi/api1/get_product";
+const TARGET_URL = "https://hanumangadi.com/hanumangadi/demoapi/get_product";
 
 export async function GET() {
   try {

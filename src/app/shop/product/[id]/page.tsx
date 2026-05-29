@@ -32,9 +32,9 @@ const ProductByIdPage = () => {
             try {
                 // If the user navigates directly without a param, fallback to the requested slug
                 const slug = (params?.id as string) || "";
-                
+
                 const response = await getProductDetail(slug);
-                
+
                 // Ensure we extract the product correctly whether it's wrapped in data as an array or object
                 let fetchedProduct = response;
                 if (response?.data && Array.isArray(response.data)) {
@@ -44,7 +44,7 @@ const ProductByIdPage = () => {
                 } else if (Array.isArray(response)) {
                     fetchedProduct = response[0];
                 }
-                
+
                 setProduct(fetchedProduct);
 
                 const firstImage = fetchedProduct?.image_urls?.split(",")?.[0] || "";
@@ -268,7 +268,7 @@ const ProductByIdPage = () => {
                     </div>
 
                     {/* THUMBNAILS */}
-                    <div className="flex gap-2 mt-5 flex-wrap justify-evenly">
+                    <div className="flex gap-2 mt-5 flex-wrap">
                         {images.map((img: string, index: number) => (
                             <button
                                 type="button"
@@ -458,7 +458,7 @@ const ProductByIdPage = () => {
                 <div className="hidden md:block">
                     {/* INTERACTIVE TAB BAR */}
                     <div className="bg-white/60 backdrop-blur-md rounded-2xl p-2 shadow-sm border border-brand-brown/10 mb-8">
-                        <div className={`grid gap-2 grid-cols-${TABS.length}`}>
+                        <div className={`grid gap-2 ${isYagya ? "grid-cols-3" : `grid-cols-4`}`}>
                             {TABS.map((t) => (
                                 <button
                                     type="button"
