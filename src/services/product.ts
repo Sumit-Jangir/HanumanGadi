@@ -77,3 +77,8 @@ export const getHomeServices = async (): Promise<HomeProduct[]> => {
   // return [...products, ...yagya];
   return [...products];
 };
+
+export const getProductDetail = async (slug: string): Promise<any> => {
+  const response = await apiGet<any>("/getProductDetail", { slug });
+  return response;
+};

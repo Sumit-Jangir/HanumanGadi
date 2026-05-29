@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { getHomeServices, HomeProduct } from "@/services/product";
 import { useLanguageStore } from "@/lib/stores/languageStore";
@@ -45,6 +45,7 @@ const formatPrice = (price: number) =>
 
 export default function ShopPage() {
   const { language } = useLanguageStore();
+  const router = useRouter();
   const [items, setItems] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, openLogin } = useAuthStore();
@@ -137,10 +138,30 @@ export default function ShopPage() {
             {[1, 2, 3].map((key) => (
               <div
                 key={key}
-                className="rounded-2xl bg-white/70 border border-white animate-pulse h-[520px]"
-              />
+                className="relative rounded-2xl bg-white/80 border border-[#e7c9a6] shadow-md overflow-hidden flex flex-col h-[520px]"
+              >
+                {/* Shimmer */}
+                <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/80 via-[#f3e7dc]/60 to-white/80 animate-skeleton-shimmer" style={{backgroundSize:'200% 100%'}} />
+                {/* Image placeholder */}
+                <div className="relative z-10 flex-1 flex items-center justify-center">
+                  <div className="w-4/5 h-60 bg-[#f3e7dc] rounded-xl mb-4" />
+                </div>
+                {/* Content placeholder */}
+                <div className="z-10 px-6 pb-6 pt-2 flex flex-col gap-3">
+                  <div className="h-6 w-3/4 bg-[#f3e7dc] rounded mb-2" />
+                  <div className="h-4 w-1/4 bg-[#f3e7dc] rounded mb-2" />
+                  <div className="h-7 w-full bg-[#e7c9a6] rounded-xl mt-4" />
+                </div>
+              </div>
             ))}
           </div>
+        /* Add shimmer animation to global styles if not present */
+        // In your global CSS (e.g., styles/globals.css):
+        // @keyframes skeleton-shimmer {
+        //   0% { background-position: -200% 0; }
+        //   100% { background-position: 200% 0; }
+        // }
+        // .animate-skeleton-shimmer { animation: skeleton-shimmer 1.5s linear infinite; }
         ) : products.length === 0 ? (
           <div className="rounded-2xl bg-white/80 border border-white p-8 text-brand-brown/80">
             {t.empty}
@@ -165,7 +186,7 @@ export default function ShopPage() {
                     y: -10,
                     scale: 1.02,
                   }}
-                  onClick={() => window.location.href = `/shop/product/${item.slug}`}
+                  onClick={() => router.push(`/shop/product/${item.slug}`)}
                   className="
                           group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] xs:min-w-[365px] sm:min-w-[400px]
                           overflow-hidden rounded-2xl
@@ -186,6 +207,7 @@ export default function ShopPage() {
                       src={imageSrc}
                       alt={title || "Product image"}
                       referrerPolicy="no-referrer"
+                      loading="lazy"
                       className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                     />
 

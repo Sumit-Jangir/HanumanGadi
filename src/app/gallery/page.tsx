@@ -89,7 +89,7 @@ function GallerySkeleton() {
             {Array.from({ length: 12 }).map((_, index) => (
                 <div
                     key={index}
-                    className={`break-inside-avoid rounded-xl bg-white/70 border border-white shadow-sm animate-pulse mb-4 ${index % 3 === 0 ? "h-72" : index % 3 === 1 ? "h-52" : "h-64"
+                    className={`break-inside-avoid rounded-xl bg-white/70 border border-[#e7c9a6] shadow-sm animate-pulse mb-4 ${index % 3 === 0 ? "h-72" : index % 3 === 1 ? "h-52" : "h-64"
                         }`}
                 />
             ))}
