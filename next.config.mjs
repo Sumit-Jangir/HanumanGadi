@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	images: {
-		domains: [
-			"hanumangadi.com",
-			"www.hanumangadi.com"
-		],
+		// domains: [
+		// 	"hanumangadi.com",
+		// 	"www.hanumangadi.com"
+		// ],
 		remotePatterns: [
 			{
 				protocol: "https",

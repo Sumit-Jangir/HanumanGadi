@@ -200,7 +200,7 @@ const ProductByIdPage = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 1.08 }}
                                     transition={{ duration: 0.35 }}
-                                    className="w-full h-full bg-white flex items-center justify-center p-6"
+                                    className="w-full h-full bg-white/70 flex items-center justify-center"
                                 >
                                     <Image
                                         src={selectedImage}
@@ -393,7 +393,7 @@ const ProductByIdPage = () => {
                 {/* DESKTOP */}
                 <div className="hidden md:block">
                     {/* INTERACTIVE TAB BAR */}
-                    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-2 shadow-sm border border-brand-brown/10 mb-8">
+                    <div className="bg-white/60 backdrop-blur-md rounded-2xl p-2 shadow-sm border border-brand-brown/10 mb-8">
                         <div className="grid grid-cols-4 gap-2">
                             {TABS.map((t) => (
                                 <button
@@ -424,7 +424,7 @@ const ProductByIdPage = () => {
                     </div>
 
                     {/* TAB CONTENT */}
-                    <div className="bg-white rounded-[28px] border border-brand-brown/10 shadow-sm p-8 min-h-[180px]">
+                    <div className="bg-white/60 rounded-[28px] border border-brand-brown/10 shadow-sm p-8 min-h-[180px]">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={tab}
@@ -446,7 +446,7 @@ const ProductByIdPage = () => {
                         return (
                             <div
                                 key={t.key}
-                                className="rounded-2xl border border-brand-brown/10 bg-white shadow-sm overflow-hidden"
+                                className="rounded-2xl border border-brand-brown/10 bg-white/70 shadow-sm overflow-hidden"
                             >
                                 <button
                                     type="button"
