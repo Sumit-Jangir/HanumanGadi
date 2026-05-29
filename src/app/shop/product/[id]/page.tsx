@@ -268,7 +268,7 @@ const ProductByIdPage = () => {
                     </div>
 
                     {/* THUMBNAILS */}
-                    <div className="flex gap-2 mt-5 flex-wrap justify-evenly">
+                    <div className="flex gap-2 mt-5 flex-wrap">
                         {images.map((img: string, index: number) => (
                             <button
                                 type="button"
