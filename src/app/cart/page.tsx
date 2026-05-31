@@ -1,118 +1,322 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import Joi from "joi";
 import { useLanguageStore } from "@/lib/stores/languageStore";
-import BreadcrumbCart from "@/components/cart-page/BreadcrumbCart";
 import CartItemRow from "@/components/cart-page/CartItemRow";
 import OrderSummary from "@/components/cart-page/OrderSummary";
-import type { CartItem } from "@/types/cart";
-
-
-const DUMMY_CART: CartItem[] = [
-  {
-    user_id: "75796fa8e09aa33e2ee615979b2de23173fbf2a6",
-    slug: "ram-raksha-yantra17745389943616",
-    product_name: "Ram Raksha Yantra",
-    product_price: "8100",
-    cod_charges: "500",
-    sku: "Ram Yantra 1234",
-    qty: 1,
-    total_price: "8100",
-    image_path:
-      "https://www.hanumangadi.com/hanumangadi/media/product_images/76d74a023ecbc6afdd2174b802e0c281c49922d6.jpeg",
-    codprice: 4300,
-  },
-];
+import { useCartStore } from "@/lib/stores/cartStore";
+import { createOrderApi } from "@/services/order";
 
 const content = {
   en: {
     bannerAlt: "Shopping Cart - Hanumangadi",
-    // pageHeading: "Shopping Cart",
-    productDetails: "Product Details",
     price: "Price",
     quantity: "Quantity",
-    sku: "SKU",
     remove: "Remove item",
     emptyTitle: "Your cart is empty",
     emptyDesc: "Explore our sacred Yantras and add something meaningful.",
     shopNow: "Continue Shopping",
+    onlinePayment: "Online Payment",
+    codPayment: "Cash on Delivery",
+    form: {
+      title: "Billing Details",
+      gotra: "Gotra For Yantra Pooja",
+      name: "Name",
+      email: "Email Address",
+      phone: "Phone Number",
+      country: "Country",
+      state: "State",
+      city: "City",
+      zipcode: "Zipcode",
+      address: "Address",
+      placeOrder: "Save & Place Order",
+      placeholders: {
+        gotra: "Enter Gotra",
+        name: "Enter Your Name",
+        email: "Enter Your Email",
+        phone: "Enter Phone Number",
+        country: "Enter Country",
+        state: "Enter State",
+        city: "Enter City",
+        zipcode: "Enter 6 Digit Zipcode",
+        address: "Enter Full Address",
+      },
+    },
+    validation: {
+      gotra: "Gotra is required",
+      name: "Name is required",
+      email: "Valid email is required",
+      phone: "Valid 10 digit phone number is required",
+      country: "Country is required",
+      state: "State is required",
+      city: "City is required",
+      zipcode: "Zipcode must be 6 digits",
+      address: "Address is required",
+    },
     summary: {
       title: "Order Summary",
       subtotal: "Estimated Subtotal",
       shipping: "Shipping",
       codCharges: "COD Charges",
       orderTotal: "Order Total",
+      codTotal: "COD Advance",
       checkout: "Proceed to Checkout",
       codNote: "Cash on delivery charges apply at checkout.",
     },
   },
   hi: {
     bannerAlt: "शॉपिंग कार्ट - हनुमानगढ़ी",
-    // pageHeading: "शॉपिंग कार्ट",
-    productDetails: "उत्पाद विवरण",
     price: "कीमत",
     quantity: "मात्रा",
-    sku: "SKU",
     remove: "आइटम हटाएं",
     emptyTitle: "आपकी कार्ट खाली है",
     emptyDesc: "हमारे पवित्र यंत्र देखें और अपनी कार्ट में जोड़ें।",
     shopNow: "खरीदारी जारी रखें",
+    onlinePayment: "ऑनलाइन भुगतान",
+    codPayment: "कैश ऑन डिलीवरी",
+    form: {
+      title: "बिलिंग विवरण",
+      gotra: "यंत्र पूजा के लिए गोत्र",
+      name: "नाम",
+      email: "ईमेल पता",
+      phone: "फोन नंबर",
+      country: "देश",
+      state: "राज्य",
+      city: "शहर",
+      zipcode: "पिन कोड",
+      address: "पता",
+      placeOrder: "सेव करें और ऑर्डर करें",
+      placeholders: {
+        gotra: "गोत्र दर्ज करें",
+        name: "अपना नाम दर्ज करें",
+        email: "अपना ईमेल दर्ज करें",
+        phone: "फोन नंबर दर्ज करें",
+        country: "देश दर्ज करें",
+        state: "राज्य दर्ज करें",
+        city: "शहर दर्ज करें",
+        zipcode: "6 अंकों का पिन कोड दर्ज करें",
+        address: "पूरा पता दर्ज करें",
+      },
+    },
+    validation: {
+      gotra: "गोत्र आवश्यक है",
+      name: "नाम आवश्यक है",
+      email: "सही ईमेल आवश्यक है",
+      phone: "सही 10 अंकों का फोन नंबर आवश्यक है",
+      country: "देश आवश्यक है",
+      state: "राज्य आवश्यक है",
+      city: "शहर आवश्यक है",
+      zipcode: "पिन कोड 6 अंकों का होना चाहिए",
+      address: "पता आवश्यक है",
+    },
     summary: {
       title: "ऑर्डर सारांश",
       subtotal: "अनुमानित उप-योग",
       shipping: "शिपिंग",
       codCharges: "COD शुल्क",
       orderTotal: "कुल राशि",
+      codTotal: "COD अग्रिम",
       checkout: "चेकआउट पर जाएं",
       codNote: "कैश ऑन डिलीवरी शुल्क चेकआउट पर लागू होगा।",
     },
   },
 };
 
+const initialBillingValues = {
+  gotra: "",
+  name: "",
+  email: "",
+  phone: "",
+  country: "",
+  state: "",
+  city: "",
+  zipcode: "",
+  address: "",
+};
+
 export default function CartPage() {
   const language = useLanguageStore((s) => s.language);
   const t = content[language];
-  const [items, setItems] = useState<CartItem[]>(DUMMY_CART);
 
-  const subtotal = useMemo(
+  const {
+    cartItems,
+    fetchCart,
+    addToCart,
+    removeFromCart,
+    totalCod,
+    totalOnline,
+    isLoading,
+  } = useCartStore();
+
+  const [paymentMode, setPaymentMode] = useState<"online" | "cod">("online");
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  const billingSchema = useMemo(
     () =>
-      items.reduce(
-        (acc, item) => acc + (parseInt(item.product_price, 10) || 0) * item.qty,
-        0
-      ),
-    [items]
+      Joi.object({
+        gotra: Joi.string().trim().required().messages({
+          "string.empty": t.validation.gotra,
+          "any.required": t.validation.gotra,
+        }),
+        name: Joi.string().trim().required().messages({
+          "string.empty": t.validation.name,
+          "any.required": t.validation.name,
+        }),
+        email: Joi.string()
+          .trim()
+          .email({ tlds: { allow: false } })
+          .required()
+          .messages({
+            "string.empty": t.validation.email,
+            "string.email": t.validation.email,
+            "any.required": t.validation.email,
+          }),
+        phone: Joi.string()
+          .trim()
+          .pattern(/^[6-9]\d{9}$/)
+          .required()
+          .messages({
+            "string.empty": t.validation.phone,
+            "string.pattern.base": t.validation.phone,
+            "any.required": t.validation.phone,
+          }),
+        country: Joi.string().trim().required().messages({
+          "string.empty": t.validation.country,
+          "any.required": t.validation.country,
+        }),
+        state: Joi.string().trim().required().messages({
+          "string.empty": t.validation.state,
+          "any.required": t.validation.state,
+        }),
+        city: Joi.string().trim().required().messages({
+          "string.empty": t.validation.city,
+          "any.required": t.validation.city,
+        }),
+        zipcode: Joi.string()
+          .trim()
+          .pattern(/^\d{6}$/)
+          .required()
+          .messages({
+            "string.empty": t.validation.zipcode,
+            "string.pattern.base": t.validation.zipcode,
+            "any.required": t.validation.zipcode,
+          }),
+        address: Joi.string().trim().required().messages({
+          "string.empty": t.validation.address,
+          "any.required": t.validation.address,
+        }),
+      }),
+    [t]
   );
 
-  const codCharges = useMemo(() => {
-    if (items.length === 0) return 0;
-    return parseInt(items[0].cod_charges, 10) || 0;
-  }, [items]);
+  const validateBillingForm = (values: typeof initialBillingValues) => {
+    const { error } = billingSchema.validate(values, {
+      abortEarly: false,
+      allowUnknown: false,
+    });
 
-  const shipping = items.length > 0 ? 0 : 0;
+    const errors: Partial<Record<keyof typeof initialBillingValues, string>> = {};
 
-  const orderTotal = subtotal + shipping;
+    if (error) {
+      error.details.forEach((detail) => {
+        const key = detail.path[0] as keyof typeof initialBillingValues;
+        errors[key] = detail.message;
+      });
+    }
 
-  const handleQtyChange = (slug: string, qty: number) => {
-    setItems((prev) =>
-      prev.map((item) => (item.slug === slug ? { ...item, qty } : item))
+    return errors;
+  };
+
+  const subtotal = cartItems.reduce((acc, item) => {
+    return (
+      acc +
+      (Number(item.totalPrice) ||
+        Number(item.price) * Number(item.quantity || 1) ||
+        0)
     );
+  }, 0);
+
+  const hasShaadiYagya = cartItems.some(
+    (item) => item.name?.toLowerCase() === "shaadi yagya"
+  );
+
+  useEffect(() => {
+    if (hasShaadiYagya && paymentMode === "cod") {
+      setPaymentMode("online");
+    }
+  }, [hasShaadiYagya, paymentMode]);
+
+  const selectedSummary =
+    paymentMode === "cod" && !hasShaadiYagya ? totalCod : totalOnline;
+
+  const shipping = Number(selectedSummary?.shipping || 0);
+
+  const orderTotal =
+    Number(selectedSummary?.totalPayAmount || 0) || subtotal + shipping;
+
+  const codCharges =
+    paymentMode === "cod" && !hasShaadiYagya
+      ? cartItems.reduce((acc, item) => acc + Number(item.codCharges || 0), 0)
+      : 0;
+
+  const handleQtyChange = async (slug: string, qty: number) => {
+    if (qty < 1) return;
+    const item = cartItems.find((i) => i.slug === slug);
+    if (!item) return;
+    await addToCart(item.slug, String(qty));
   };
 
-  const handleRemove = (slug: string) => {
-    setItems((prev) => prev.filter((item) => item.slug !== slug));
+  const handleRemove = async (slug: string) => {
+    const item = cartItems.find((i) => i.slug === slug);
+    if (!item) return;
+    await removeFromCart(item.slug, String(item.quantity || 1));
   };
 
-  const handleCheckout = () => {
-    // Placeholder until checkout flow is wired
-    window.alert(
-      language === "hi"
-        ? "चेकआउट जल्द ही उपलब्ध होगा।"
-        : "Checkout will be available soon."
-    );
+  const handlePlaceOrder = async (values: typeof initialBillingValues) => {
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token")?.replace(/"/g, "") : "";
+      if (!token) {
+        window.alert("User not logged in");
+        return;
+      }
+      const payload = {
+        gotra: values.gotra,
+        name: values.name,
+        phone_number: values.phone,
+        email: values.email,
+        city: values.city,
+        country: values.country,
+        state: values.state,
+        pincode: values.zipcode,
+        address: values.address,
+        payment_mode: paymentMode === "cod" ? "1" : "2",
+        cod_advance: paymentMode === "cod" ? String(codCharges) : "0",
+        yagya: "",
+      };
+      const res = await createOrderApi(payload);
+      if (res?.status && res?.paymentUrl) {
+        window.location.href = res.paymentUrl;
+      } else {
+        window.alert(res?.msg || "Order failed");
+      }
+    } catch (err: any) {
+      window.alert(err?.message || "Order failed");
+    }
   };
+
+  const inputClass =
+    "w-full rounded-2xl border border-gray-200 bg-white/60 px-4 py-3 text-sm text-gray-800 outline-none transition-all placeholder:text-gray-400 focus:border-brand-brown focus:ring-2 focus:ring-brand-brown/10";
+
+  const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
+  const errorClass = "mt-1 text-xs font-medium text-red-500";
 
   return (
     <motion.div
@@ -120,7 +324,6 @@ export default function CartPage() {
       animate={{ opacity: 1 }}
       className="theme-page max-w-[1900px] mx-auto overflow-x-hidden min-h-screen"
     >
-      {/* Hero banner — same pattern as About Us / Contact */}
       <section className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -143,32 +346,20 @@ export default function CartPage() {
             />
           </motion.div>
         </motion.div>
-
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center py-8 px-4"
-        >
-          <h1 className="text-xl md:text-2xl font-bold tracking-widest text-[#7b1c1c] uppercase">
-            {t.pageHeading}
-          </h1>
-        </motion.div> */}
       </section>
 
-      {/* Cart body */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        {/* <BreadcrumbCart /> */}
-
-        {items.length === 0 ? (
+        {cartItems.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             className="theme-card relative p-12 text-center"
           >
             <div className="absolute -inset-2 rounded-3xl bg-brand-cream blur-2xl opacity-60 -z-10" />
+
             <p className="text-2xl font-bold text-gray-800">{t.emptyTitle}</p>
             <p className="mt-2 text-gray-500">{t.emptyDesc}</p>
+
             <Link
               href="/shop"
               className="btn-gradient-slide mt-8 inline-flex items-center justify-center px-8 py-3"
@@ -177,70 +368,263 @@ export default function CartPage() {
             </Link>
           </motion.div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10"
+          <Formik
+            initialValues={initialBillingValues}
+            validate={validateBillingForm}
+            onSubmit={handlePlaceOrder}
           >
-            {/* Product list */}
-            <div className="flex-1 min-w-0">
-              <div className="relative">
+            {({ isSubmitting }) => (
+              <Form>
                 <motion.div
-                  className="pointer-events-none absolute -inset-2 rounded-3xl bg-brand-cream blur-2xl opacity-50 -z-10"
-                  animate={{ opacity: [0.35, 0.55, 0.35] }}
-                  transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-                />
-
-                <div className="theme-card p-5 md:p-8">
-                  {/* Table header — desktop */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="mb-2 hidden border-b border-brand-brown/10 pb-4 text-xs font-bold uppercase tracking-widest text-gray-500 sm:grid sm:grid-cols-[auto_1fr_auto_auto] sm:gap-6 sm:pl-12"
-                  >
-                    <span className="sm:col-span-2 sm:pl-0">{t.productDetails}</span>
-                    <span className="text-right">{t.price}</span>
-                    <span className="text-right">{t.quantity}</span>
-                  </motion.div>
-
-                  <AnimatePresence mode="popLayout">
-                    {items.map((item) => (
-                      <CartItemRow
-                        key={item.slug}
-                        item={item}
-                        labels={{
-                          price: t.price,
-                          quantity: t.quantity,
-                          sku: t.sku,
-                          remove: t.remove,
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="relative">
+                      <motion.div
+                        className="pointer-events-none absolute -inset-2 rounded-3xl bg-brand-cream blur-2xl opacity-50 -z-10"
+                        animate={{ opacity: [0.35, 0.55, 0.35] }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 5,
+                          ease: "easeInOut",
                         }}
-                        onQtyChange={handleQtyChange}
-                        onRemove={handleRemove}
                       />
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
 
-            {/* Order summary */}
-            <motion.div
-              className="w-full lg:w-[380px] flex-shrink-0"
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <OrderSummary
-                subtotal={subtotal}
-                shipping={shipping}
-                orderTotal={orderTotal}
-                labels={t.summary}
-                onCheckout={handleCheckout}
-              />
-            </motion.div>
-          </motion.div>
+                      <div className="space-y-5">
+                        <AnimatePresence mode="popLayout">
+                          {cartItems.map((item) => (
+                            <CartItemRow
+                              key={item.slug}
+                              item={item}
+                              labels={{
+                                price: t.price,
+                                quantity: t.quantity,
+                                remove: t.remove,
+                              }}
+                              onQtyChange={handleQtyChange}
+                              onRemove={handleRemove}
+                            />
+                          ))}
+                        </AnimatePresence>
+                      </div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                        className="mt-6 rounded-2xl border border-brand-brown/20 bg-white p-4 shadow-sm md:p-6"
+                      >
+                        <h2 className="text-2xl font-bold text-brand-brown">
+                          {t.form.title}
+                        </h2>
+                        <div className="mt-2 h-1 w-16 rounded-full bg-brand-brown" />
+
+                        <div className="mt-5 space-y-3">
+                          <div>
+                            <label className={labelClass}>{t.form.gotra}</label>
+                            <Field
+                              name="gotra"
+                              className={inputClass}
+                              placeholder={t.form.placeholders.gotra}
+                            />
+                            <ErrorMessage
+                              name="gotra"
+                              component="p"
+                              className={errorClass}
+                            />
+                          </div>
+
+                          <div>
+                            <label className={labelClass}>{t.form.name}</label>
+                            <Field
+                              name="name"
+                              className={inputClass}
+                              placeholder={t.form.placeholders.name}
+                            />
+                            <ErrorMessage
+                              name="name"
+                              component="p"
+                              className={errorClass}
+                            />
+                          </div>
+
+                          <div>
+                            <label className={labelClass}>{t.form.email}</label>
+                            <Field
+                              name="email"
+                              type="email"
+                              className={inputClass}
+                              placeholder={t.form.placeholders.email}
+                            />
+                            <ErrorMessage
+                              name="email"
+                              component="p"
+                              className={errorClass}
+                            />
+                          </div>
+
+                          <div>
+                            <label className={labelClass}>{t.form.phone}</label>
+                            <Field
+                              name="phone"
+                              className={inputClass}
+                              placeholder={t.form.placeholders.phone}
+                              maxLength={10}
+                            />
+                            <ErrorMessage
+                              name="phone"
+                              component="p"
+                              className={errorClass}
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                            <div>
+                              <label className={labelClass}>
+                                {t.form.country}
+                              </label>
+                              <Field
+                                name="country"
+                                className={inputClass}
+                                placeholder={t.form.placeholders.country}
+                              />
+                              <ErrorMessage
+                                name="country"
+                                component="p"
+                                className={errorClass}
+                              />
+                            </div>
+
+                            <div>
+                              <label className={labelClass}>
+                                {t.form.state}
+                              </label>
+                              <Field
+                                name="state"
+                                className={inputClass}
+                                placeholder={t.form.placeholders.state}
+                              />
+                              <ErrorMessage
+                                name="state"
+                                component="p"
+                                className={errorClass}
+                              />
+                            </div>
+
+                            <div>
+                              <label className={labelClass}>{t.form.city}</label>
+                              <Field
+                                name="city"
+                                className={inputClass}
+                                placeholder={t.form.placeholders.city}
+                              />
+                              <ErrorMessage
+                                name="city"
+                                component="p"
+                                className={errorClass}
+                              />
+                            </div>
+
+                            <div>
+                              <label className={labelClass}>
+                                {t.form.zipcode}
+                              </label>
+                              <Field
+                                name="zipcode"
+                                className={inputClass}
+                                placeholder={t.form.placeholders.zipcode}
+                                maxLength={6}
+                              />
+                              <ErrorMessage
+                                name="zipcode"
+                                component="p"
+                                className={errorClass}
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className={labelClass}>{t.form.address}</label>
+                            <Field
+                              as="textarea"
+                              name="address"
+                              rows={4}
+                              className={inputClass}
+                              placeholder={t.form.placeholders.address}
+                            />
+                            <ErrorMessage
+                              name="address"
+                              component="p"
+                              className={errorClass}
+                            />
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
+
+                  <motion.div
+                    className="w-full lg:sticky lg:top-24 lg:w-[380px] flex-shrink-0"
+                    initial={{ opacity: 0, x: 24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    <div className="flex gap-4 mb-6">
+                      <button
+                        type="button"
+                        className={`flex-1 py-3 rounded-xl font-semibold border transition-colors ${
+                          paymentMode === "online"
+                            ? "bg-brand-brown text-white border-brand-brown"
+                            : "bg-white text-brand-brown border-brand-brown/40"
+                        }`}
+                        onClick={() => setPaymentMode("online")}
+                      >
+                        {t.onlinePayment}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={`flex-1 py-3 rounded-xl font-semibold border transition-colors ${
+                          paymentMode === "cod" && !hasShaadiYagya
+                            ? "bg-brand-brown text-white border-brand-brown"
+                            : "bg-white text-brand-brown border-brand-brown/40"
+                        } ${
+                          hasShaadiYagya ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                        onClick={() => {
+                          if (!hasShaadiYagya) setPaymentMode("cod");
+                        }}
+                        disabled={hasShaadiYagya}
+                      >
+                        {t.codPayment}
+                      </button>
+                    </div>
+
+                    <OrderSummary
+                      subtotal={subtotal}
+                      shipping={shipping}
+                      orderTotal={orderTotal}
+                      labels={t.summary}
+                      onCheckout={() => {}}
+                      codCharges={codCharges}
+                      paymentMode={paymentMode}
+                    />
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="mt-5 w-full rounded-2xl bg-brand-brown px-6 py-4 text-base font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {t.form.placeOrder}
+                    </button>
+                  </motion.div>
+                </motion.div>
+              </Form>
+            )}
+          </Formik>
         )}
       </section>
     </motion.div>
