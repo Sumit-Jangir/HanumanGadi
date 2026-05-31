@@ -13,6 +13,7 @@ import { useLanguageStore } from "@/lib/stores/languageStore";
 import { useParams } from "next/navigation";
 import { getProductDetail } from "@/services/product";
 import { useCartStore } from "@/lib/stores/cartStore";
+import useAuthStore from "@/lib/stores/authStore";
 
 const ProductByIdPage = () => {
     const params = useParams();
@@ -24,6 +25,7 @@ const ProductByIdPage = () => {
     const [added, setAdded] = useState(false);
     const [addingToCart, setAddingToCart] = useState(false);
         const { addToCart } = useCartStore();
+        const { isLoggedIn, openLogin } = useAuthStore();
     const [tab, setTab] = useState("description");
     // Allow multiple mobile sections to be open at once
     const [activeMobileSections, setActiveMobileSections] = useState<string[]>(["description"]);
@@ -236,6 +238,10 @@ const ProductByIdPage = () => {
 
     // Add to Cart handler
     const handleAddToCart = async () => {
+        if (!isLoggedIn) {
+            openLogin();
+            return;
+        }
         if (!product) return;
         setAddingToCart(true);
         try {

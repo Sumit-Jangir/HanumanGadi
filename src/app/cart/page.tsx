@@ -322,7 +322,7 @@ export default function CartPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="theme-page max-w-[1900px] mx-auto overflow-x-hidden min-h-screen"
+      className="theme-page max-w-[1900px] mx-auto overflow-x-hidden "
     >
       <section className="w-full">
         <motion.div
@@ -348,7 +348,7 @@ export default function CartPage() {
         </motion.div>
       </section>
 
-      <section className="py-16 px-4 max-w-7xl mx-auto">
+      <section className="py-10 md:py-16 px-4 max-w-7xl mx-auto">
         {cartItems.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}

@@ -1,14 +1,17 @@
 "use client";
 
+
 import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cartStore";
 import useAuthStore from "@/lib/stores/authStore";
 
+
 const CartBtn = () => {
   const { totalQuantities, fetchCart } = useCartStore();
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, openLogin } = useAuthStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -16,10 +19,20 @@ const CartBtn = () => {
     }
   }, [isLoggedIn, fetchCart]);
 
+  const handleCartClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (isLoggedIn) {
+      router.push("/cart");
+    } else {
+      openLogin();
+    }
+  };
+
   return (
-    <Link
-      href="/cart"
+    <button
+      onClick={handleCartClick}
       className="relative flex items-center justify-center mr-3"
+      aria-label="Cart"
     >
       <Image
         priority
@@ -35,7 +48,7 @@ const CartBtn = () => {
           {totalQuantities}
         </span>
       )}
-    </Link>
+    </button>
   );
 };
 
