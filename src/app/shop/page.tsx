@@ -2,35 +2,29 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { getHomeServices, HomeProduct } from "@/services/product";
 import { useLanguageStore } from "@/lib/stores/languageStore";
 import Image from "next/image";
 import useAuthStore from "@/lib/stores/authStore";
 import { useCartStore } from "@/lib/stores/cartStore";
-
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 50 },
-  show: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
-  }),
-};
-
+import { FiCheckCircle, FiLoader } from "react-icons/fi";
 
 const copy = {
   en: {
     title: "Our Products",
     subtitle: "Explore our Yantra and Yagya offerings",
     cta: "Add to Cart",
+    adding: "Adding...",
+    added: "Added!",
     empty: "No products available right now.",
   },
   hi: {
     title: "हमारे उत्पाद",
     subtitle: "हमारे यंत्र और यज्ञ देखें",
     cta: "कार्ट में जोड़ें",
+    adding: "जोड़ा जा रहा है...",
+    added: "जुड़ गया!",
     empty: "अभी कोई उत्पाद उपलब्ध नहीं है।",
   },
 };
@@ -42,15 +36,20 @@ const formatPrice = (price: number) =>
     maximumFractionDigits: 0,
   }).format(price || 0);
 
-
 export default function ShopPage() {
   const { language } = useLanguageStore();
   const router = useRouter();
+
   const [items, setItems] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
+
   const { isLoggedIn, openLogin } = useAuthStore();
   const { addToCart } = useCartStore();
+
   const [addingId, setAddingId] = useState<string | null>(null);
+  const [addedId, setAddedId] = useState<string | null>(null);
+
+  const t = copy[language];
 
   const handleAddToCart = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -65,10 +64,19 @@ export default function ShopPage() {
     }
 
     const productId = item?.slug;
+    if (!productId) return;
 
     try {
       setAddingId(productId);
+      setAddedId(null);
+
       await addToCart(productId, "1");
+
+      setAddedId(productId);
+
+      setTimeout(() => {
+        setAddedId(null);
+      }, 1500);
     } catch (error) {
       console.error("Add to cart failed:", error);
     } finally {
@@ -78,6 +86,7 @@ export default function ShopPage() {
 
   useEffect(() => {
     let active = true;
+
     const load = async () => {
       try {
         const data = await getHomeServices();
@@ -88,23 +97,23 @@ export default function ShopPage() {
         if (active) setLoading(false);
       }
     };
+
     load();
+
     return () => {
       active = false;
     };
   }, []);
 
   const products = items;
-  const t = copy[language];
 
   return (
     <div className="theme-page max-w-[1920px] mx-auto overflow-x-hidden">
-      {/* Banner Section */}
       <section className="w-full">
         <div className="m-3 md:m-0">
           <div className="w-full h-auto rounded-2xl md:rounded-none overflow-hidden">
             <Image
-              src={"/banners/AstrologerAboutYantra.png"}
+              src="/banners/AstrologerAboutYantra.png"
               alt="Shop Banner"
               width={1920}
               height={600}
@@ -113,26 +122,15 @@ export default function ShopPage() {
             />
           </div>
         </div>
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center py-8 px-4"
-        >
-          <h1 className="text-xl md:text-2xl font-bold tracking-widest text-[#7b1c1c] uppercase">
-            {t.title}
-          </h1>
-        </motion.div> */}
       </section>
 
-      {/* Products Section */}
       <section className="py-12 px-4 max-w-7xl mx-auto">
         <div className="mb-8 md:mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-brand-brown">
             {t.title}
           </h2>
-          {/* <p className="text-base text-brand-brown/80 mt-1">{t.subtitle}</p> */}
         </div>
+
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((key) => (
@@ -140,13 +138,15 @@ export default function ShopPage() {
                 key={key}
                 className="relative rounded-2xl bg-white/80 border border-[#e7c9a6] shadow-md overflow-hidden flex flex-col h-[520px]"
               >
-                {/* Shimmer */}
-                <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/80 via-[#f3e7dc]/60 to-white/80 animate-skeleton-shimmer" style={{backgroundSize:'200% 100%'}} />
-                {/* Image placeholder */}
+                <div
+                  className="absolute inset-0 z-0 bg-gradient-to-r from-white/80 via-[#f3e7dc]/60 to-white/80 animate-skeleton-shimmer"
+                  style={{ backgroundSize: "200% 100%" }}
+                />
+
                 <div className="relative z-10 flex-1 flex items-center justify-center">
                   <div className="w-4/5 h-60 bg-[#f3e7dc] rounded-xl mb-4" />
                 </div>
-                {/* Content placeholder */}
+
                 <div className="z-10 px-6 pb-6 pt-2 flex flex-col gap-3">
                   <div className="h-6 w-3/4 bg-[#f3e7dc] rounded mb-2" />
                   <div className="h-4 w-1/4 bg-[#f3e7dc] rounded mb-2" />
@@ -155,13 +155,6 @@ export default function ShopPage() {
               </div>
             ))}
           </div>
-        /* Add shimmer animation to global styles if not present */
-        // In your global CSS (e.g., styles/globals.css):
-        // @keyframes skeleton-shimmer {
-        //   0% { background-position: -200% 0; }
-        //   100% { background-position: 200% 0; }
-        // }
-        // .animate-skeleton-shimmer { animation: skeleton-shimmer 1.5s linear infinite; }
         ) : products.length === 0 ? (
           <div className="rounded-2xl bg-white/80 border border-white p-8 text-brand-brown/80">
             {t.empty}
@@ -171,10 +164,15 @@ export default function ShopPage() {
             {products.map((item, index) => {
               const title =
                 language === "hi" ? item.titleHi || item.title : item.title;
+
               const imageSrc =
                 item.image && item.image.startsWith("http")
                   ? `/api/image-proxy?url=${encodeURIComponent(item.image)}`
                   : "/banners/AstrologerContactUs.png";
+
+              const isAdding = addingId === item.slug;
+              const isAdded = addedId === item.slug;
+
               return (
                 <motion.article
                   key={item.id}
@@ -188,20 +186,21 @@ export default function ShopPage() {
                   }}
                   onClick={() => router.push(`/shop/product/${item.slug}`)}
                   className="
-                          group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] xs:min-w-[365px] sm:min-w-[400px]
-                          overflow-hidden rounded-2xl
-                          bg-white/95
-                          border border-[#e7c9a6]
-                          shadow-md
-                          hover:shadow-2xl
-                          hover:border-[#8b5a3c]
-                          transition-all duration-500
-                          relative
-                          before:rounded-2xl
-                          before:border before:border-transparent
-                          before:transition-all before:duration-500
-                          hover:bg-[#fffdfb]
-                          "                >
+                    group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] xs:min-w-[365px] sm:min-w-[400px]
+                    overflow-hidden rounded-2xl
+                    bg-white/95
+                    border border-[#e7c9a6]
+                    shadow-md
+                    hover:shadow-2xl
+                    hover:border-[#8b5a3c]
+                    transition-all duration-500
+                    relative
+                    before:rounded-2xl
+                    before:border before:border-transparent
+                    before:transition-all before:duration-500
+                    hover:bg-[#fffdfb]
+                  "
+                >
                   <div className="relative -mt-7 pt-3 h-[380px] md:h-[400px] overflow-hidden">
                     <img
                       src={imageSrc}
@@ -211,10 +210,6 @@ export default function ShopPage() {
                       className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                     />
 
-                    {/* Gradient Overlay */}
-                    {/* <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" /> */}
-
-                    {/* Bottom Fade */}
                     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/90 to-transparent" />
                   </div>
 
@@ -233,13 +228,32 @@ export default function ShopPage() {
                       </span>
                     </div>
 
-                    <button
+                    <motion.button
+                      type="button"
                       onClick={(e) => handleAddToCart(e, item)}
-                      disabled={addingId === item.id.toString()}
-                      className="mt-5 btn-gradient-slide inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
+                      disabled={isAdding}
+                      className={`mt-5 w-full h-12 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${isAdded
+                          ? "bg-green-500 text-white"
+                          : "btn-gradient-slide text-white"
+                        } ${isAdding ? "opacity-90 cursor-not-allowed" : ""
+                        }`}
                     >
-                      {addingId === item.id.toString() ? "Adding..." : t.cta}
-                    </button>
+                      {isAdding ? (
+                        <>
+                          <FiLoader className="animate-spin" size={18} />
+                          {t.adding}
+                        </>
+                      ) : isAdded ? (
+                        <>
+                          <FiCheckCircle size={18} />
+                          {t.added}
+                        </>
+                      ) : (
+                        <>
+                          {t.cta}
+                        </>
+                      )}
+                    </motion.button>
                   </div>
                 </motion.article>
               );
