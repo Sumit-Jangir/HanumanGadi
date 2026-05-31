@@ -186,7 +186,7 @@ export default function ShopPage() {
                   }}
                   onClick={() => router.push(`/shop/product/${item.slug}`)}
                   className="
-                    group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] xs:min-w-[365px] sm:min-w-[400px]
+                    group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] sm:min-w-[400px]
                     overflow-hidden rounded-2xl
                     bg-white/95
                     border border-[#e7c9a6]

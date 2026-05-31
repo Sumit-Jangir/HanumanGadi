@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, UserCircle2, ShoppingBag, LogOut, LogIn, X } from "lucide-react";
 
 import useAuthStore from "@/lib/stores/authStore";
+import { useRouter } from "next/navigation";
 
 const dropdownVariants = {
   hidden: { opacity: 0, scale: 0.9, y: -12 },
@@ -35,6 +36,9 @@ const itemVariants = {
 const UserMenuBtn = () => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
+
   const { isLoggedIn, logout, openLogin } = useAuthStore();
 
   useEffect(() => {
@@ -137,7 +141,11 @@ const UserMenuBtn = () => {
 
                   <motion.div custom={2} variants={itemVariants} initial="hidden" animate="visible">
                     <button
-                      onClick={() => { logout(); setOpen(false); }}
+                      onClick={() => {
+                        logout();
+                        setOpen(false);
+                        router.push("/");
+                      }}
                       className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
                     >
                       <span className="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-red-100 flex items-center justify-center transition-colors duration-200 shrink-0">

@@ -47,7 +47,7 @@ const LatestEventsSection = () => {
 
   return (
     <div
-      className="py-8 md:py-10 relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
+      className="py-8 md:py-10 -mx-3 md:mx-0 relative overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed"
       style={{
         backgroundImage:
           "linear-gradient(to bottom, rgba(232,168,124,0.50), rgba(212,132,92,0.50)), url('/banners/video.png')",
