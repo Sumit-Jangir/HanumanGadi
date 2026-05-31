@@ -18,11 +18,15 @@ type OrderSummaryProps = {
     title: string;
     subtotal: string;
     shipping: string;
+    codCharges: string;
+    codTotal: string;
     orderTotal: string;
     checkout: string;
     codNote: string;
   };
   onCheckout: () => void;
+  codCharges?: number;
+  paymentMode?: 'online' | 'cod';
 };
 
 function SummaryRow({
@@ -50,12 +54,15 @@ function SummaryRow({
   );
 }
 
+
 export default function OrderSummary({
   subtotal,
   shipping,
   orderTotal,
   labels,
   onCheckout,
+  codCharges = 0,
+  paymentMode = 'online',
 }: OrderSummaryProps) {
   return (
     <motion.aside
@@ -72,11 +79,14 @@ export default function OrderSummary({
         <div className="mt-6 space-y-3 border-b border-brand-brown/10 pb-6">
           <SummaryRow label={labels.subtotal} value={subtotal} />
           <SummaryRow label={labels.shipping} value={shipping} />
+          {/* {paymentMode === 'cod' && codCharges > 0 && (
+            <SummaryRow label={labels.codCharges} value={codCharges} />
+          )} */}
         </div>
 
         <motion.div className="mt-6 flex items-center justify-between">
           <span className="text-base font-bold text-gray-900">
-            {labels.orderTotal}
+           {paymentMode === 'cod' ? labels.codTotal : labels.orderTotal}
           </span>
           <motion.span
             key={orderTotal}
@@ -87,8 +97,8 @@ export default function OrderSummary({
             {formatPrice(orderTotal)}
           </motion.span>
         </motion.div>
-        
-        <motion.button
+
+        {/* <motion.button
           type="button"
           onClick={onCheckout}
           whileHover={{ scale: 1.01 }}
@@ -97,7 +107,7 @@ export default function OrderSummary({
         >
           {labels.checkout}
           <FaArrowRight className="text-sm" />
-        </motion.button>
+        </motion.button> */}
       </div>
     </motion.aside>
   );
