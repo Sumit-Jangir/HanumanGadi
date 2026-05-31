@@ -28,7 +28,7 @@ export const createOrderApi = async (
     token = localStorage.getItem("token")?.replace(/"/g, "") || "";
   }
 
-  const response = await fetcher("/createOrder", {
+  const response = await fetcher("/api/order", {
     method: "POST",
     data: formData,
     headers: token ? { Authorization: token } : undefined,

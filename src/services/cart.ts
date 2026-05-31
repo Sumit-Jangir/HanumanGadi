@@ -5,7 +5,7 @@ export const removeFromCartApi = async (userId: string, productId: string, qty: 
   formData.append("flag", "0");
   formData.append("qty", qty);
 
-  return apiPost("/addToCart", formData, {
+  return apiPost("/api/addToCart", formData, {
     "Content-Type": "multipart/form-data",
   });
 };
@@ -19,11 +19,11 @@ export const addToCartApi = async (userId: string, productId: string, qty: strin
   formData.append("flag", "1");
   formData.append("qty", qty);
 
-  return apiPost("/addToCart", formData, {
+  return apiPost("/api/addToCart", formData, {
     "Content-Type": "multipart/form-data",
   });
 };
 
 export const viewCartApi = async (userId: string) => {
-  return apiGet(`/viewCart?user_id=${userId}`);
+  return apiGet(`/api/viewCart?user_id=${userId}`);
 };
