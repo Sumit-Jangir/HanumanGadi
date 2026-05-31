@@ -12,6 +12,7 @@ import {
 import { useLanguageStore } from "@/lib/stores/languageStore";
 import { useParams } from "next/navigation";
 import { getProductDetail } from "@/services/product";
+import { useCartStore } from "@/lib/stores/cartStore";
 
 const ProductByIdPage = () => {
     const params = useParams();
@@ -21,6 +22,8 @@ const ProductByIdPage = () => {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
     const [qty, setQty] = useState<number>(1);
     const [added, setAdded] = useState(false);
+    const [addingToCart, setAddingToCart] = useState(false);
+        const { addToCart } = useCartStore();
     const [tab, setTab] = useState("description");
     // Allow multiple mobile sections to be open at once
     const [activeMobileSections, setActiveMobileSections] = useState<string[]>(["description"]);
@@ -231,6 +234,23 @@ const ProductByIdPage = () => {
         return null;
     };
 
+    // Add to Cart handler
+    const handleAddToCart = async () => {
+        if (!product) return;
+        setAddingToCart(true);
+        try {
+            const productSlug = product.slug || params?.id;
+            const sendQty = isYagya ? 1 : qty;
+            await addToCart(productSlug, String(sendQty));
+            setAdded(true);
+            setTimeout(() => setAdded(false), 2000);
+        } catch (err) {
+            window.alert(language === "hi" ? "कार्ट में जोड़ने में त्रुटि!" : "Error adding to cart!");
+        } finally {
+            setAddingToCart(false);
+        }
+    };
+
     return (
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 min-h-screen">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -423,14 +443,18 @@ const ProductByIdPage = () => {
                                 : "btn-gradient-slide"
                             : "bg-gray-300 text-gray-500 cursor-not-allowed"
                             }`}
-                        disabled={!inStock}
-                        onClick={() => {
-                            setAdded(true);
-                            setTimeout(() => setAdded(false), 2000);
-                        }}
+                        disabled={!inStock || addingToCart}
+                        onClick={handleAddToCart}
                     >
                         {inStock ? (
-                            added ? (
+                            addingToCart ? (
+                                <>
+                                    <FiPackage size={18} />
+                                    {language === "hi"
+                                        ? "जोड़ा जा रहा है..."
+                                        : "Adding..."}
+                                </>
+                            ) : added ? (
                                 <>
                                     <FiCheckCircle size={18} />
                                     {language === "hi"
