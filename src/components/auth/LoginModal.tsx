@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
@@ -54,6 +54,17 @@ const LoginModal = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (isLoginOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isLoginOpen]);
 
   // Don't render the wrapper at all if not open, AnimatePresence handles the exit animation
   return (
