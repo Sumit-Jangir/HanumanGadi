@@ -10,6 +10,20 @@ import useAuthStore from "@/lib/stores/authStore";
 import { loginApi } from "@/services/auth";
 import { useCartStore } from "@/lib/stores/cartStore";
 
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.95, y: 20 },
+};
+
+const modalTransition = { type: "spring", duration: 0.5, bounce: 0.3 } as const;
+
 const LoginModal = () => {
   const { isLoginOpen, closeLogin, setToken } = useAuthStore();
   const { fetchCart } = useCartStore();
@@ -73,19 +87,21 @@ const LoginModal = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center">
           {/* Blurred overlay background */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            variants={overlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             onClick={closeLogin}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           {/* Modal Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={modalTransition}
             className="relative z-10 mx-4 flex w-full max-w-[900px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl md:flex-row"
           >
             {/* Close Button */}

@@ -9,6 +9,36 @@ import { useLanguageStore } from "@/lib/stores/languageStore";
 const AUTO_SCROLL_MS = 6000;
 const SWIPE_THRESHOLD = 70;
 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
+};
+const sectionTransition = { duration: 0.6, ease: "easeOut" } as const;
+
+const titleVariants = {
+  hidden: { opacity: 0, x: -24 },
+  visible: { opacity: 1, x: 0 },
+};
+const titleTransition = { delay: 0.05, duration: 0.45, ease: "easeOut" } as const;
+
+const navVariants = {
+  hidden: { opacity: 0, x: 24 },
+  visible: { opacity: 1, x: 0 },
+};
+const navTransition = { delay: 0.12, duration: 0.45, ease: "easeOut" } as const;
+
+const gridVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0 },
+};
+const gridTransition = { delay: 0.18, duration: 0.45, ease: "easeOut" } as const;
+
+const dotsVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 },
+};
+const dotsTransition = { delay: 0.26, duration: 0.35, ease: "easeOut" } as const;
+
 const cardVariants = {
   enter: (direction: number) => ({ opacity: 0, x: direction > 0 ? 90 : -90, scale: 0.98 }),
   center: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.4, ease: "easeOut" } },
@@ -74,30 +104,33 @@ const MantraSection = () => {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      variants={sectionVariants}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={sectionTransition}
       className="max-w-frame mx-auto px-4 xl:px-0 py-10 md:py-14"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="flex items-start justify-between gap-5 mb-7 md:mb-9">
         <motion.div
-          initial={{ opacity: 0, x: -24 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          variants={titleVariants}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ delay: 0.05, duration: 0.45, ease: "easeOut" }}
+          transition={titleTransition}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-brand-brown tracking-tight">{copy[language].title}</h2>
           <p className="text-sm md:text-base text-brand-brown/70 mt-1.5">{copy[language].subtitle}</p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          variants={navVariants}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ delay: 0.12, duration: 0.45, ease: "easeOut" }}
+          transition={navTransition}
           className="flex items-center gap-2 shrink-0"
         >
           <button
@@ -118,10 +151,11 @@ const MantraSection = () => {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={gridVariants}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
-        transition={{ delay: 0.18, duration: 0.45, ease: "easeOut" }}
+        transition={gridTransition}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.30}
@@ -164,10 +198,11 @@ const MantraSection = () => {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={dotsVariants}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, amount: 0.4 }}
-        transition={{ delay: 0.26, duration: 0.35, ease: "easeOut" }}
+        transition={dotsTransition}
         className="mt-6 flex items-center gap-2 justify-center lg:justify-start"
       >
         {Array.from({ length: totalItems }).map((_, i) => (
