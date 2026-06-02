@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { MANTRA_DATA } from "@/utils/mantraData";
 import { useLanguageStore } from "@/lib/stores/languageStore";
@@ -171,8 +171,7 @@ const MantraSection = () => {
         }}
         className="grid grid-cols-1 lg:grid-cols-2 gap-5 cursor-grab active:cursor-grabbing"
       >
-        <LayoutGroup id="mantra-cards">
-        <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+        <AnimatePresence initial={false} mode="sync" custom={direction}>
           {currentItems.map((item) => (
             <motion.article
               key={item.id}
@@ -194,7 +193,6 @@ const MantraSection = () => {
             </motion.article>
           ))}
         </AnimatePresence>
-        </LayoutGroup>
       </motion.div>
 
       <motion.div

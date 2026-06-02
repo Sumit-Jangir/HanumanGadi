@@ -87,6 +87,7 @@ const LoginModal = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center">
           {/* Blurred overlay background */}
           <motion.div
+            layout={false}
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
@@ -97,6 +98,7 @@ const LoginModal = () => {
 
           {/* Modal Content */}
           <motion.div
+            layout={false}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
