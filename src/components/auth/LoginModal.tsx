@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
@@ -9,20 +9,6 @@ import { loginSchema } from "@/lib/validation";
 import useAuthStore from "@/lib/stores/authStore";
 import { loginApi } from "@/services/auth";
 import { useCartStore } from "@/lib/stores/cartStore";
-
-const overlayVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
-const modalVariants = {
-  hidden: { opacity: 0, scale: 0.95, y: 20 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: 20 },
-};
-
-const modalTransition = { type: "spring", duration: 0.5, bounce: 0.3 } as const;
 
 const LoginModal = () => {
   const { isLoginOpen, closeLogin, setToken } = useAuthStore();
@@ -69,17 +55,6 @@ const LoginModal = () => {
     },
   });
 
-  useEffect(() => {
-    if (isLoginOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isLoginOpen]);
-
   // Don't render the wrapper at all if not open, AnimatePresence handles the exit animation
   return (
     <AnimatePresence>
@@ -87,23 +62,19 @@ const LoginModal = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center">
           {/* Blurred overlay background */}
           <motion.div
-            layout={false}
-            variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={closeLogin}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           {/* Modal Content */}
           <motion.div
-            layout={false}
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={modalTransition}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
             className="relative z-10 mx-4 flex w-full max-w-[900px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl md:flex-row"
           >
             {/* Close Button */}
