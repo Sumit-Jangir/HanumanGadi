@@ -16,6 +16,15 @@ const nextConfig = {
 			},
 		],
 	},
+	async rewrites() {
+		return [
+			{
+				// Proxy all /api/proxy/* requests server-side → eliminates browser CORS
+				source: "/api/proxy/:path*",
+				destination: "https://hanumangadi.com/hanumangadi/demoapi/:path*",
+			},
+		];
+	},
 };
 
 export default nextConfig;
