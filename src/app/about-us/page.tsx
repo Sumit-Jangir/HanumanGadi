@@ -150,9 +150,9 @@ export default function AboutUsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-center pt-12 px-4"
+          className="text-center pt-8 sm:pt-10 md:pt-12 px-4"
         >
-          <h1 className="text-xl md:text-2xl font-bold tracking-widest text-[#7b1c1c] uppercase">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-widest text-[#7b1c1c] uppercase">
             {t.welcomeHeading[0]}
             <br />
             {t.welcomeHeading[1]}
@@ -161,8 +161,8 @@ export default function AboutUsPage() {
       </section>
 
       {/* ══════════ SECTION 1 — Mission ══════════ */}
-      <section className="pb-0 sm:py-12 px-4 max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center gap-12">
+      <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Image */}
           <motion.div
             variants={fadeLeft}
@@ -219,8 +219,8 @@ export default function AboutUsPage() {
       <OrnamentDivider />
 
       {/* ══════════ SECTION 2 — Renowned Astrologer ══════════ */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row-reverse items-center gap-12">
+      <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
           {/* Image */}
           <motion.div
             variants={fadeRight}
@@ -274,7 +274,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* ══════════ CONTACT / QUOTE SECTION ══════════ */}
-      <section className="py-20 px-4 max-w-6xl mx-auto">
+      <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -291,7 +291,7 @@ export default function AboutUsPage() {
             }}
           />
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 p-10 md:p-16">
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 p-6 sm:p-8 md:p-12 lg:p-16">
             {/* Left quote text */}
             <div className="flex-1 text-white">
               <motion.div
