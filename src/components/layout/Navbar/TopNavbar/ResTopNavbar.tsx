@@ -15,14 +15,15 @@ import {
   LogIn,
   LogOut,
   ShoppingBag,
-  UserCircle2,
   X,
 } from "lucide-react";
 import useAuthStore from "@/lib/stores/authStore";
+import { useRouter } from "next/navigation";
 
 const ResTopNavbar = ({ data }: { data: NavMenu }) => {
   const [open, setOpen] = useState(false);
   const { isLoggedIn, logout, openLogin } = useAuthStore();
+  const router = useRouter();
 
   const handleLogin = () => {
     setOpen(false);
@@ -32,6 +33,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
   const handleLogout = () => {
     logout();
     setOpen(false);
+    router.push("/");
   };
 
   return (

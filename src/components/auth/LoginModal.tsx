@@ -43,7 +43,7 @@ const LoginModal = () => {
             closeLogin();
             setSuccessMsg("");
             formik.resetForm();
-          }, 1500);
+          }, 500);
         } else {
           setErrorMsg(response?.msg || "Login failed. Please try again.");
         }

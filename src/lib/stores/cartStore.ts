@@ -17,6 +17,7 @@ interface CartState {
   fetchCart: () => Promise<void>;
   addToCart: (productId: string, qty?: string) => Promise<void>;
   removeFromCart: (productId: string, qty?: string) => Promise<void>;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -62,6 +63,10 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
+  },
+
+  clearCart: () => {
+    set({ cartItems: [], totalQuantities: 0, totalCod: null, totalOnline: null });
   },
 
   removeFromCart: async (productId: string, qty = "1") => {

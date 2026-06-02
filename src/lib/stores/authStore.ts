@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getStorage, setStorage, removeStorage } from '@/utils/storage';
+import { useCartStore } from '@/lib/stores/cartStore';
 
 interface AuthState {
   isLoggedIn: boolean;
@@ -23,6 +24,7 @@ const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     removeStorage('token');
     set({ token: null, isLoggedIn: false });
+    useCartStore.getState().clearCart();
   },
   openLogin: () => set({ isLoginOpen: true }),
   closeLogin: () => set({ isLoginOpen: false }),

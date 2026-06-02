@@ -1,5 +1,40 @@
 import { apiPost, fetcher } from "@/utils/api";
 
+export interface OrderItem {
+  orderStatus: string;
+  product_name: string;
+  product_price: string;
+  product_image_link: string;
+  quantity: string;
+  total_amount: string;
+  to_pay: string;
+  order_date: string;
+  order_no: string;
+  order_display_id: string;
+  encoded_order_id: string;
+  payment_mode: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  country: string;
+}
+
+export const getOrderHistory = async (): Promise<{ msg: string; status: boolean; data: OrderItem[] }> => {
+  let token = "";
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("token")?.replace(/"/g, "") || "";
+  }
+
+  const formData = new FormData();
+  formData.append("user_id", token);
+
+  return fetcher("/orderHistory", {
+    method: "POST",
+    data: formData,
+  });
+};
+
 export interface CreateOrderPayload {
   gotra: string;
   name: string;

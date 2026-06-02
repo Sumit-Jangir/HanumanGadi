@@ -103,23 +103,40 @@ const ServicesSection = () => {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col items-center gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
           {[1, 2, 3].map((key) => (
             <div
               key={key}
-              className="relative rounded-2xl bg-white/80 border border-[#e7c9a6] shadow-md overflow-hidden flex flex-col h-[520px]"
+              className="w-full max-w-[480px] md:max-w-[340px] lg:max-w-[400px] rounded-2xl border border-[#e7c9a6] bg-white/95 shadow-md overflow-hidden animate-pulse"
             >
-              <div
-                className="absolute inset-0 z-0 bg-gradient-to-r from-white/80 via-[#f3e7dc]/60 to-white/80 animate-skeleton-shimmer"
-                style={{ backgroundSize: "200% 100%" }}
-              />
-              <div className="relative z-10 flex-1 flex items-center justify-center">
-                <div className="w-4/5 h-60 bg-[#f3e7dc] rounded-xl mb-4" />
+              {/* Mobile skeleton: horizontal */}
+              <div className="flex md:hidden items-stretch gap-3 p-3">
+                <div className="shrink-0 w-[100px] h-[100px] rounded-xl bg-[#f3e7dc]" />
+                <div className="flex flex-col justify-between flex-1 min-w-0 py-1">
+                  <div className="space-y-2">
+                    <div className="h-3.5 w-full bg-[#f3e7dc] rounded" />
+                    <div className="h-3.5 w-3/4 bg-[#f3e7dc] rounded" />
+                    <div className="flex gap-2 mt-1">
+                      <div className="h-3 w-16 bg-[#e7c9a6] rounded" />
+                      <div className="h-3 w-14 bg-[#f3e7dc] rounded-full" />
+                    </div>
+                  </div>
+                  <div className="h-8 w-full bg-[#e7c9a6] rounded-xl mt-2" />
+                </div>
               </div>
-              <div className="z-10 px-6 pb-6 pt-2 flex flex-col gap-3">
-                <div className="h-6 w-3/4 bg-[#f3e7dc] rounded mb-2" />
-                <div className="h-4 w-1/4 bg-[#f3e7dc] rounded mb-2" />
-                <div className="h-7 w-full bg-[#e7c9a6] rounded-xl mt-4" />
+
+              {/* Desktop skeleton: vertical */}
+              <div className="hidden md:block">
+                <div className="h-[320px] lg:h-[400px] bg-[#f3e7dc]" />
+                <div className="p-5 space-y-3">
+                  <div className="h-5 w-3/4 bg-[#f3e7dc] rounded" />
+                  <div className="h-4 w-1/2 bg-[#f3e7dc] rounded" />
+                  <div className="flex items-center justify-between gap-3 mt-4">
+                    <div className="h-5 w-20 bg-[#e7c9a6] rounded" />
+                    <div className="h-6 w-20 bg-[#f3e7dc] rounded-full" />
+                  </div>
+                  <div className="h-12 w-full bg-[#e7c9a6] rounded-2xl mt-5" />
+                </div>
               </div>
             </div>
           ))}
