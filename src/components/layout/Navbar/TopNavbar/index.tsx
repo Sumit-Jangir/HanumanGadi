@@ -34,7 +34,7 @@ const getNavData: NavMenu = [
   {
     id: 3,
     type: "MenuItem",
-    label: "Yantra",
+    label: "Our Products",
     url: "/shop",
     children: [],
   },

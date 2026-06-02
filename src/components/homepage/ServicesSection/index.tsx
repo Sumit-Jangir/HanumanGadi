@@ -129,7 +129,7 @@ const ServicesSection = () => {
           {t.empty}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-6">
+        <div className="flex flex-col items-center gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:justify-items-center md:gap-6">
           {services.map((item, index) => {
             const title =
               language === "hi" ? item.titleHi || item.title : item.title;
@@ -142,78 +142,108 @@ const ServicesSection = () => {
             return (
               <motion.article
                 key={item.id}
-                initial={{ opacity: 0, y: 22 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ delay: index * 0.08, duration: 0.45 }}
-                whileHover={{
-                  y: -10,
-                  scale: 1.02,
-                }}
+                whileHover={{ y: -6, scale: 1.01 }}
                 onClick={() => router.push(`/shop/product/${item.slug}`)}
                 className="
-                  group h-full max-w-[340px] xs:max-w-[365px] sm:max-w-[400px] min-w-[340px] sm:min-w-[400px]
+                  group w-full max-w-[480px] md:max-w-[340px] lg:max-w-[400px]
                   overflow-hidden rounded-2xl
                   bg-white/95
                   border border-[#e7c9a6]
                   shadow-md
-                  hover:shadow-2xl
+                  hover:shadow-xl
                   hover:border-[#8b5a3c]
                   transition-all duration-500
-                  relative
-                  before:rounded-2xl
-                  before:border before:border-transparent
-                  before:transition-all before:duration-500
-                  hover:bg-[#fffdfb]"
+                  cursor-pointer"
               >
-                <div className="relative -mt-7 pt-3 h-[380px] md:h-[400px] overflow-hidden">
-                  <img
-                    src={imageSrc}
-                    alt={title || "Product image"}
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/90 to-transparent" />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-2xl font-semibold text-brand-brown leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[#6b3b22]">
-                    {title}
-                  </h3>
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <span className="text-base font-bold text-[#7a4326] transition-transform duration-300 group-hover:scale-105">
-                      {formatPrice(item.price)}
-                    </span>
-                    <span className="text-xs px-3 py-1.5 border border-[#6b3b22] rounded-full bg-[#f3e7dc] text-brand-brown whitespace-nowrap transition-all duration-300 group-hover:bg-[#6b3b22] group-hover:text-white">
-                      {item.category}
-                    </span>
+                {/* ── Mobile: horizontal layout ── */}
+                <div className="flex md:hidden items-stretch gap-3 p-3">
+                  <div className="shrink-0 w-[100px] h-[100px] rounded-xl overflow-hidden bg-[#f9f3ec]">
+                    <img
+                      src={imageSrc}
+                      alt={title || "Product image"}
+                      referrerPolicy="no-referrer"
+                      loading="lazy"
+                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                    />
                   </div>
-                  <motion.button
-                    type="button"
-                    onClick={(e) => handleAddToCart(e, item)}
-                    disabled={isAdding}
-                    className={`mt-5 w-full h-12 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${isAdded
-                        ? "bg-green-500 text-white"
-                        : "btn-gradient-slide text-white"
-                      } ${isAdding ? "opacity-90 cursor-not-allowed" : ""
-                      }`}
-                  >
-                    {isAdding ? (
-                      <>
-                        <FiLoader className="animate-spin" size={18} />
-                        {t.adding}
-                      </>
-                    ) : isAdded ? (
-                      <>
-                        <FiCheckCircle size={18} />
-                        {t.added}
-                      </>
-                    ) : (
-                      <>
-                        {t.cta}
-                      </>
-                    )}
-                  </motion.button>
+                  <div className="flex flex-col justify-between flex-1 min-w-0">
+                    <div>
+                      <h3 className="text-sm font-semibold text-brand-brown leading-snug line-clamp-2 group-hover:text-[#6b3b22] transition-colors duration-300">
+                        {title}
+                      </h3>
+                      <div className="mt-1 flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-[#7a4326]">
+                          {formatPrice(item.price)}
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 border border-[#6b3b22] rounded-full bg-[#f3e7dc] text-brand-brown whitespace-nowrap">
+                          {item.category}
+                        </span>
+                      </div>
+                    </div>
+                    <motion.button
+                      type="button"
+                      onClick={(e) => handleAddToCart(e, item)}
+                      disabled={isAdding}
+                      className={`mt-2 w-full h-8 rounded-xl font-semibold text-xs flex items-center justify-center gap-1 shadow transition-all duration-300 ${
+                        isAdded ? "bg-green-500 text-white" : "btn-gradient-slide text-white"
+                      } ${isAdding ? "opacity-90 cursor-not-allowed" : ""}`}
+                    >
+                      {isAdding ? (
+                        <><FiLoader className="animate-spin" size={14} />{t.adding}</>
+                      ) : isAdded ? (
+                        <><FiCheckCircle size={14} />{t.added}</>
+                      ) : (
+                        t.cta
+                      )}
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* ── Desktop: vertical layout ── */}
+                <div className="hidden md:block">
+                  <div className="relative -mt-7 pt-3 h-[320px] lg:h-[400px] overflow-hidden">
+                    <img
+                      src={imageSrc}
+                      alt={title || "Product image"}
+                      referrerPolicy="no-referrer"
+                      loading="lazy"
+                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/90 to-transparent" />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-xl lg:text-2xl font-semibold text-brand-brown leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[#6b3b22]">
+                      {title}
+                    </h3>
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                      <span className="text-base font-bold text-[#7a4326]">
+                        {formatPrice(item.price)}
+                      </span>
+                      <span className="text-xs px-3 py-1.5 border border-[#6b3b22] rounded-full bg-[#f3e7dc] text-brand-brown whitespace-nowrap transition-all duration-300 group-hover:bg-[#6b3b22] group-hover:text-white">
+                        {item.category}
+                      </span>
+                    </div>
+                    <motion.button
+                      type="button"
+                      onClick={(e) => handleAddToCart(e, item)}
+                      disabled={isAdding}
+                      className={`mt-5 w-full h-12 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${
+                        isAdded ? "bg-green-500 text-white" : "btn-gradient-slide text-white"
+                      } ${isAdding ? "opacity-90 cursor-not-allowed" : ""}`}
+                    >
+                      {isAdding ? (
+                        <><FiLoader className="animate-spin" size={18} />{t.adding}</>
+                      ) : isAdded ? (
+                        <><FiCheckCircle size={18} />{t.added}</>
+                      ) : (
+                        t.cta
+                      )}
+                    </motion.button>
+                  </div>
                 </div>
               </motion.article>
             );
