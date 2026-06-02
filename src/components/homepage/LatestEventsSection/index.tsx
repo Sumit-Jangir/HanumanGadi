@@ -14,15 +14,17 @@ const LatestEventsSection = () => {
     fetchGallery();
   }, [fetchGallery]);
 
-  if (!mounted || loading) {
+  // Only show skeleton on true first load (no data cached yet)
+  const hasData = videos.length > 0 || images.length > 0;
+  if (!mounted || (loading && !hasData)) {
     return (
       <div className="bg-gradient-to-b from-[#E8A87C] to-[#D4845C] py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12">
             Latest Events
           </h2>
-          <div className="flex items-center justify-center h-80">
-            <div className="text-white text-lg">Loading...</div>
+          <div className="animate-pulse flex justify-center">
+            <div className="w-full max-w-4xl rounded-2xl bg-white/20 aspect-video" />
           </div>
         </div>
       </div>

@@ -17,6 +17,9 @@ export const useGalleryStore = create<GalleryState>((set) => ({
   loading: false,
   error: null,
   fetchGallery: async () => {
+    // Skip if data is already loaded
+    const state = useGalleryStore.getState();
+    if (state.videos.length > 0 || state.images.length > 0) return;
     set({ loading: true, error: null });
     try {
       const data = await getGallery();

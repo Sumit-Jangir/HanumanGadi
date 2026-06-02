@@ -2,9 +2,9 @@
 
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
-import { makeStore } from "../lib/store";
+import { singletonStore, singletonPersistor } from "../lib/store";
 import { PersistGate } from "redux-persist/integration/react";
-import SpinnerbLoader from "@/components/ui/SpinnerbLoader";
+import PageLoader from "@/components/ui/PageLoader";
 import useAuthStore from "@/lib/stores/authStore";
 
 type Props = {
@@ -12,7 +12,6 @@ type Props = {
 };
 
 const Providers = ({ children }: Props) => {
-  const { store, persistor } = makeStore();
   const { checkLoginStatus } = useAuthStore();
 
   useEffect(() => {
@@ -20,15 +19,8 @@ const Providers = ({ children }: Props) => {
   }, [checkLoginStatus]);
 
   return (
-    <Provider store={store}>
-      <PersistGate
-        loading={
-          <div className="flex items-center justify-center h-96">
-            <SpinnerbLoader className="w-10 border-2 border-gray-300 border-r-gray-600" />
-          </div>
-        }
-        persistor={persistor}
-      >
+    <Provider store={singletonStore}>
+      <PersistGate loading={<PageLoader />} persistor={singletonPersistor}>
         {children}
       </PersistGate>
     </Provider>
@@ -36,3 +28,4 @@ const Providers = ({ children }: Props) => {
 };
 
 export default Providers;
+

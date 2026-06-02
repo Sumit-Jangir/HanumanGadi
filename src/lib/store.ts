@@ -32,7 +32,12 @@ export const makeStore = () => {
   return { store, persistor };
 };
 
-const store = makeStore().store;
+// Singleton — created once at module load, shared across the whole app
+const storeInstance = makeStore();
+export const singletonStore = storeInstance.store;
+export const singletonPersistor = storeInstance.persistor;
+
+const store = singletonStore;
 
 // Infer the type of the store
 export type AppStore = typeof store;
