@@ -30,7 +30,7 @@ const fadeVariants = {
 const copy = {
   en: {
     title: "Benefits Of Hindu Mantras",
-    subtitle: "MANTRAS",
+    subtitle: "Mantras",
   },
   hi: {
     title: "हिंदू मंत्रों के लाभ",
@@ -106,10 +106,10 @@ const MantraSection = () => {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ delay: 0.05, duration: 0.45, ease: "easeOut" }}
         >
-          <h2 className="text-2xl xs:text-3xl md:text-4xl font-bold text-brand-brown tracking-tight">
+          <h2 className=" hidden sm:block text-2xl xs:text-3xl md:text-4xl font-bold text-brand-brown tracking-tight">
             {copy[language].title}
           </h2>
-          <p className="text-sm md:text-base text-brand-brown/70 mt-1.5">{copy[language].subtitle}</p>
+          <p className="text-3xl sm:text-sm md:text-base font-bold sm:font-normal text-brand-brown sm:text-brand-brown/70 mt-1.5 ">{copy[language].subtitle}</p>
         </motion.div>
 
         <motion.div

@@ -11,6 +11,7 @@ import CartItemRow from "@/components/cart-page/CartItemRow";
 import OrderSummary from "@/components/cart-page/OrderSummary";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { createOrderApi } from "@/services/order";
+import { toast } from "sonner";
 
 const content = {
   en: {
@@ -68,6 +69,11 @@ const content = {
       checkout: "Proceed to Checkout",
       codNote: "Cash on delivery charges apply at checkout.",
     },
+    toast: {
+      formError: "Please complete all required billing fields.",
+      notLoggedIn: "Please login first to place your order.",
+      orderFailed: "Something went wrong. Please try again.",
+    },
   },
   hi: {
     bannerAlt: "शॉपिंग कार्ट - हनुमानगढ़ी",
@@ -124,6 +130,11 @@ const content = {
       checkout: "चेकआउट पर जाएं",
       codNote: "कैश ऑन डिलीवरी शुल्क चेकआउट पर लागू होगा।",
     },
+    toast: {
+      formError: "कृपया सभी आवश्यक बिलिंग फ़ील्ड भरें।",
+      notLoggedIn: "ऑर्डर करने के लिए पहले लॉगिन करें।",
+      orderFailed: "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
+    },
   },
 };
 
@@ -138,6 +149,10 @@ const initialBillingValues = {
   zipcode: "",
   address: "",
 };
+
+const allBillingFieldsTouched = Object.fromEntries(
+  Object.keys(initialBillingValues).map((key) => [key, true])
+) as Record<keyof typeof initialBillingValues, boolean>;
 
 export default function CartPage() {
   const language = useLanguageStore((s) => s.language);
@@ -284,7 +299,7 @@ export default function CartPage() {
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("token")?.replace(/"/g, "") : "";
       if (!token) {
-        window.alert("User not logged in");
+        toast.error(t.toast.notLoggedIn);
         return;
       }
       const payload = {
@@ -305,10 +320,10 @@ export default function CartPage() {
       if (res?.status && res?.paymentUrl) {
         window.location.href = res.paymentUrl;
       } else {
-        window.alert(res?.msg || "Order failed");
+        toast.error(res?.msg || t.toast.orderFailed);
       }
     } catch (err: any) {
-      window.alert(err?.message || "Order failed");
+      toast.error(err?.message || t.toast.orderFailed);
     }
   };
 
@@ -373,7 +388,7 @@ export default function CartPage() {
             validate={validateBillingForm}
             onSubmit={handlePlaceOrder}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, validateForm, setTouched, submitForm }) => (
               <Form>
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}
@@ -614,8 +629,17 @@ export default function CartPage() {
                     />
 
                     <button
-                      type="submit"
+                      type="button"
                       disabled={isSubmitting}
+                      onClick={async () => {
+                        const errors = await validateForm();
+                        if (Object.keys(errors).length > 0) {
+                          setTouched(allBillingFieldsTouched);
+                          toast.error(t.toast.formError);
+                          return;
+                        }
+                        submitForm();
+                      }}
                       className="mt-5 w-full rounded-2xl bg-brand-brown px-6 py-4 text-base font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {t.form.placeOrder}

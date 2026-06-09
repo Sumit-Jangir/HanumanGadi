@@ -20,13 +20,6 @@ const slides = [
     href: "/shop",
     btnLabel: "अभी बुक करें",
   },
-  // {
-  //   id: 3,
-  //   src: "/banners/banner5.png",
-  //   alt: "Sacred Yantras",
-  //   href: "/shop",
-  //   btnLabel: "Explore",
-  // },
 ];
 
 const AUTOPLAY_DELAY = 4500;
@@ -62,7 +55,6 @@ const NavBtn = ({
   children: React.ReactNode;
   side: "left" | "right";
 }) => (
-  /* wrapper handles positioning — keeps Framer motion transforms isolated */
   <div
     className={`hidden sm:block absolute ${
       side === "left" ? "left-3 sm:left-5" : "right-3 sm:right-5"
@@ -83,34 +75,43 @@ const NavBtn = ({
 const HeroBanner = () => {
   const [[current, direction], setPage] = useState([0, 0]);
   const [paused, setPaused] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
+
+  const goTo = useCallback((index: number) => {
+    setPage(([prev]) => [index, index > prev ? 1 : -1]);
+  }, []);
 
   const paginate = useCallback((newDir: number) => {
-    setImgLoaded(false);
     setPage(([prev]) => [
       (prev + newDir + slides.length) % slides.length,
       newDir,
     ]);
   }, []);
 
-  // Autoplay
+  // Preload all slides so cached images never miss onLoad on slide change
+  useEffect(() => {
+    slides.forEach((slide) => {
+      const img = new window.Image();
+      img.src = slide.src;
+    });
+  }, []);
+
   useEffect(() => {
     if (paused) return;
     const timer = setTimeout(() => paginate(1), AUTOPLAY_DELAY);
     return () => clearTimeout(timer);
   }, [current, paused, paginate]);
 
+  const slide = slides[current];
+
   return (
     <section
-    //  className="relative w-full overflow-hidden mx-3 rounded-2xl h-[25vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh] xl:h-[80vh] md:mx-0 md:rounded-none max-h-[900px]"
-     className="relative w-full aspect-[1920/600] overflow-hidden rounded-2xl  md:mx-0  md:rounded-none  "
+      className="relative w-full aspect-[1920/600] overflow-hidden rounded-2xl md:mx-0 md:rounded-none bg-brand-cream-dark"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Slides */}
-      <AnimatePresence initial={false} custom={direction}>
+      <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
-          key={current}
+          key={slide.id}
           custom={direction}
           variants={slideVariants}
           initial="enter"
@@ -125,50 +126,30 @@ const HeroBanner = () => {
             else if (info.offset.x > 60) paginate(-1);
           }}
         >
-          {/* Image fade-in on load */}
-          <motion.div
-            className="absolute inset-0 rounded-2xl sm:rounded-none overflow-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: imgLoaded ? 1 : 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            <Image
-              src={slides[current].src}
-              alt={slides[current].alt}
-              width={1920}
-              height={600}
-              priority
-              className="object-cover select-none pointer-events-none"
-              sizes="100vw"
-              // onLoadingComplete={() => setImgLoaded(true)}
-              onLoad={() => setImgLoaded(true)}
-              // onError={() => setImgLoaded(true)} // <-- Add this line
-            />
-          </motion.div>
-
-          {/* Skeleton shimmer while loading */}
-          {/* {!imgLoaded && (
-            <div className="absolute inset-0 bg-brand-cream-dark animate-pulse" />
-          )} */}
+          <Image
+            src={slide.src}
+            alt={slide.alt}
+            fill
+            priority={current === 0}
+            className="object-cover select-none pointer-events-none"
+            sizes="100vw"
+          />
         </motion.div>
       </AnimatePresence>
 
-      {/* Prev button */}
       <NavBtn onClick={() => paginate(-1)} label="Previous slide" side="left">
         <ChevronLeft size={18} strokeWidth={2.5} />
       </NavBtn>
 
-      {/* Next button */}
       <NavBtn onClick={() => paginate(1)} label="Next slide" side="right">
         <ChevronRight size={18} strokeWidth={2.5} />
       </NavBtn>
 
-      {/* Dots — bottom right */}
       <div className="absolute bottom-3 right-3 sm:bottom-6 sm:right-6 z-10 flex items-center gap-2">
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => setPage(([prev]) => [i, i > prev ? 1 : -1])}
+            onClick={() => goTo(i)}
             aria-label={`Go to slide ${i + 1}`}
             className="focus:outline-none"
           >
@@ -186,7 +167,6 @@ const HeroBanner = () => {
         ))}
       </div>
 
-      {/* Progress bar */}
       {!paused && (
         <motion.div
           key={`progress-${current}`}
@@ -202,4 +182,3 @@ const HeroBanner = () => {
 };
 
 export default HeroBanner;
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Play, Eye } from "lucide-react";
@@ -44,6 +44,23 @@ const getProxyImage = (src: string) => {
     return src?.startsWith("http")
         ? `/api/image-proxy?url=${encodeURIComponent(src)}`
         : src;
+};
+
+const SWIPE_THRESHOLD = 50;
+
+const modalSlideVariants = {
+    enter: (direction: number) => ({
+        x: direction > 0 ? 120 : -120,
+        opacity: 0,
+    }),
+    center: {
+        x: 0,
+        opacity: 1,
+    },
+    exit: (direction: number) => ({
+        x: direction > 0 ? -120 : 120,
+        opacity: 0,
+    }),
 };
 
 function GalleryTabs({
@@ -210,21 +227,75 @@ function GalleryModal({
     onNext: () => void;
     onPrev: () => void;
 }) {
+    const [direction, setDirection] = useState(0);
+    const touchStart = useRef({ x: 0, y: 0 });
+
+    const canNavigate = items.length > 1;
+
+    const navigateNext = useCallback(() => {
+        if (!canNavigate) return;
+        setDirection(1);
+        onNext();
+    }, [canNavigate, onNext]);
+
+    const navigatePrev = useCallback(() => {
+        if (!canNavigate) return;
+        setDirection(-1);
+        onPrev();
+    }, [canNavigate, onPrev]);
+
+    const handleTouchStart = useCallback((event: React.TouchEvent) => {
+        touchStart.current = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY,
+        };
+    }, []);
+
+    const handleTouchEnd = useCallback(
+        (event: React.TouchEvent) => {
+            if (!canNavigate) return;
+
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - touchStart.current.x;
+            const deltaY = touch.clientY - touchStart.current.y;
+
+            if (
+                Math.abs(deltaX) > Math.abs(deltaY) &&
+                Math.abs(deltaX) > SWIPE_THRESHOLD
+            ) {
+                if (deltaX < 0) navigateNext();
+                else navigatePrev();
+            }
+        },
+        [canNavigate, navigateNext, navigatePrev]
+    );
+
+    const handleDragEnd = useCallback(
+        (_: unknown, info: { offset: { x: number } }) => {
+            if (!canNavigate) return;
+
+            if (info.offset.x < -SWIPE_THRESHOLD) navigateNext();
+            else if (info.offset.x > SWIPE_THRESHOLD) navigatePrev();
+        },
+        [canNavigate, navigateNext, navigatePrev]
+    );
+
     useEffect(() => {
         const handleKey = (event: KeyboardEvent) => {
             if (event.key === "Escape") onClose();
-            if (event.key === "ArrowRight") onNext();
-            if (event.key === "ArrowLeft") onPrev();
+            if (event.key === "ArrowRight") navigateNext();
+            if (event.key === "ArrowLeft") navigatePrev();
         };
 
         if (modal) window.addEventListener("keydown", handleKey);
 
         return () => window.removeEventListener("keydown", handleKey);
-    }, [modal, onClose, onNext, onPrev]);
+    }, [modal, onClose, navigateNext, navigatePrev]);
 
     if (!modal) return null;
 
     const item = items[modal.index];
+    const enableDrag = canNavigate && item.type === "image";
 
     return (
         <AnimatePresence>
@@ -232,82 +303,108 @@ function GalleryModal({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 touch-pan-y"
             >
                 <button
                     onClick={onClose}
-                    className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition"
+                    className="absolute top-5 right-5 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition"
                 >
                     <X size={24} />
                 </button>
 
-                {items.length > 1 && (
+                {canNavigate && (
                     <>
                         <button
-                            onClick={onPrev}
-                            className="absolute left-4 md:left-8 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition"
+                            onClick={navigatePrev}
+                            className="absolute left-4 md:left-8 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition"
                         >
                             <ChevronLeft size={26} />
                         </button>
 
                         <button
-                            onClick={onNext}
-                            className="absolute right-4 md:right-8 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition"
+                            onClick={navigateNext}
+                            className="absolute right-4 md:right-8 z-20 w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition"
                         >
                             <ChevronRight size={26} />
                         </button>
+
+                        {/* Edge swipe zones for mobile — iframes/videos don't bubble touch events */}
+                        <div
+                            className="absolute left-0 top-0 bottom-0 w-20 z-10 md:hidden"
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
+                            aria-hidden
+                        />
+                        <div
+                            className="absolute right-0 top-0 bottom-0 w-20 z-10 md:hidden"
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
+                            aria-hidden
+                        />
                     </>
                 )}
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
-                    className="relative max-w-5xl w-full"
-                >
-                    {item.type === "image" ? (
-                        <div className="flex justify-center">
-                            <img
-                                src={getProxyImage(item.src)}
-                                alt="Gallery preview"
-                                referrerPolicy="no-referrer"
-                                className="max-h-[85vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl"
-                            />
-                        </div>
-                    ) : (
-                        <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
-                            {item.src.includes("youtube.com") ||
-                                item.src.includes("youtu.be") ? (
-                                <div className="aspect-video">
-                                    <iframe
-                                        src={getVideoEmbedUrl(item.src)}
-                                        title={item.title}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className="w-full h-full"
-                                    />
-                                </div>
-                            ) : (
-                                <video
-                                    src={item.src}
-                                    controls
-                                    autoPlay
-                                    playsInline
-                                    className="w-full max-h-[80vh] bg-black"
+                <AnimatePresence initial={false} custom={direction} mode="wait">
+                    <motion.div
+                        key={modal.index}
+                        custom={direction}
+                        variants={modalSlideVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{ duration: 0.25 }}
+                        drag={enableDrag ? "x" : false}
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={0.35}
+                        onDragEnd={handleDragEnd}
+                        className={`relative max-w-5xl w-full ${enableDrag ? "cursor-grab active:cursor-grabbing" : ""}`}
+                    >
+                        {item.type === "image" ? (
+                            <div className="flex justify-center">
+                                <img
+                                    src={getProxyImage(item.src)}
+                                    alt="Gallery preview"
+                                    referrerPolicy="no-referrer"
+                                    draggable={false}
+                                    className="max-h-[85vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl select-none pointer-events-none"
                                 />
-                            )}
+                            </div>
+                        ) : (
+                            <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
+                                {item.src.includes("youtube.com") ||
+                                    item.src.includes("youtu.be") ? (
+                                    <div className="aspect-video">
+                                        <iframe
+                                            src={getVideoEmbedUrl(item.src)}
+                                            title={item.title}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            className="w-full h-full"
+                                        />
+                                    </div>
+                                ) : (
+                                    <video
+                                        src={item.src}
+                                        controls
+                                        autoPlay
+                                        playsInline
+                                        className="w-full max-h-[80vh] bg-black"
+                                    />
+                                )}
 
-                            {item.title && (
-                                <div className="bg-white p-5">
-                                    <h3 className="text-lg font-bold text-brand-brown">
-                                        {item.title}
-                                    </h3>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </motion.div>
+                                {item.title && (
+                                    <div className="bg-white p-5">
+                                        <h3 className="text-lg font-bold text-brand-brown">
+                                            {item.title}
+                                        </h3>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </motion.div>
+                </AnimatePresence>
             </motion.div>
         </AnimatePresence>
     );

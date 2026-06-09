@@ -103,39 +103,31 @@ const ServicesSection = () => {
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
+        <div className="flex flex-col items-center gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:justify-items-center sm:items-stretch sm:gap-6">
           {[1, 2, 3].map((key) => (
             <div
               key={key}
-              className="w-full max-w-[480px] md:max-w-[340px] lg:max-w-[400px] rounded-2xl border border-[#e7c9a6] bg-white/95 shadow-md overflow-hidden animate-pulse"
+              className="w-full max-w-[480px] sm:flex sm:flex-col sm:h-full sm:w-[280px] sm:max-w-none md:w-[320px] rounded-2xl border border-[#e7c9a6] bg-white/95 shadow-md overflow-hidden animate-pulse"
             >
-              {/* Mobile skeleton: horizontal */}
-              <div className="flex md:hidden items-stretch gap-3 p-3">
+              <div className="flex sm:hidden items-stretch gap-3 p-3">
                 <div className="shrink-0 w-[100px] h-[100px] rounded-xl bg-[#f3e7dc]" />
                 <div className="flex flex-col justify-between flex-1 min-w-0 py-1">
                   <div className="space-y-2">
                     <div className="h-3.5 w-full bg-[#f3e7dc] rounded" />
                     <div className="h-3.5 w-3/4 bg-[#f3e7dc] rounded" />
-                    <div className="flex gap-2 mt-1">
-                      <div className="h-3 w-16 bg-[#e7c9a6] rounded" />
-                      <div className="h-3 w-14 bg-[#f3e7dc] rounded-full" />
-                    </div>
                   </div>
                   <div className="h-8 w-full bg-[#e7c9a6] rounded-xl mt-2" />
                 </div>
               </div>
-
-              {/* Desktop skeleton: vertical */}
-              <div className="hidden md:block">
-                <div className="h-[320px] lg:h-[400px] bg-[#f3e7dc]" />
-                <div className="p-5 space-y-3">
-                  <div className="h-5 w-3/4 bg-[#f3e7dc] rounded" />
-                  <div className="h-4 w-1/2 bg-[#f3e7dc] rounded" />
-                  <div className="flex items-center justify-between gap-3 mt-4">
-                    <div className="h-5 w-20 bg-[#e7c9a6] rounded" />
-                    <div className="h-6 w-20 bg-[#f3e7dc] rounded-full" />
+              <div className="hidden sm:flex sm:flex-col sm:flex-1">
+                <div className="shrink-0 h-[220px] md:h-[270px] bg-[#f3e7dc]" />
+                <div className="flex flex-1 flex-col p-4 md:p-5 space-y-3">
+                  <div className="h-5 w-3/4 bg-[#f3e7dc] rounded min-h-[2.5em]" />
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="h-4 w-20 bg-[#e7c9a6] rounded" />
+                    <div className="h-6 w-16 bg-[#f3e7dc] rounded-full" />
                   </div>
-                  <div className="h-12 w-full bg-[#e7c9a6] rounded-2xl mt-5" />
+                  <div className="h-12 w-full bg-[#e7c9a6] rounded-2xl mt-auto" />
                 </div>
               </div>
             </div>
@@ -146,7 +138,7 @@ const ServicesSection = () => {
           {t.empty}
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:justify-items-center md:gap-6">
+        <div className="flex flex-col items-center gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:justify-items-center sm:items-stretch sm:gap-6">
           {services.map((item, index) => {
             const title =
               language === "hi" ? item.titleHi || item.title : item.title;
@@ -165,19 +157,10 @@ const ServicesSection = () => {
                 transition={{ delay: index * 0.08, duration: 0.45 }}
                 whileHover={{ y: -6, scale: 1.01 }}
                 onClick={() => router.push(`/shop/product/${item.slug}`)}
-                className="
-                  group w-full max-w-[480px] md:max-w-[340px] lg:max-w-[400px]
-                  overflow-hidden rounded-2xl
-                  bg-white/95
-                  border border-[#e7c9a6]
-                  shadow-md
-                  hover:shadow-xl
-                  hover:border-[#8b5a3c]
-                  transition-all duration-500
-                  cursor-pointer"
+                className="group w-full max-w-[480px] sm:flex sm:flex-col sm:h-full sm:w-[280px] sm:max-w-none md:w-[320px] overflow-hidden rounded-2xl bg-white/95 border border-[#e7c9a6] shadow-md hover:shadow-xl hover:border-[#8b5a3c] transition-all duration-500 cursor-pointer"
               >
-                {/* ── Mobile: horizontal layout ── */}
-                <div className="flex md:hidden items-stretch gap-3 p-3">
+                {/* Below sm: horizontal layout */}
+                <div className="flex sm:hidden items-stretch gap-3 p-3">
                   <div className="shrink-0 w-[100px] h-[100px] rounded-xl overflow-hidden bg-[#f9f3ec]">
                     <img
                       src={imageSrc}
@@ -220,9 +203,9 @@ const ServicesSection = () => {
                   </div>
                 </div>
 
-                {/* ── Desktop: vertical layout ── */}
-                <div className="hidden md:block">
-                  <div className="relative -mt-7 pt-3 h-[320px] lg:h-[400px] overflow-hidden">
+                {/* sm+: equal-size vertical cards */}
+                <div className="hidden sm:flex sm:flex-col sm:flex-1 sm:h-full">
+                  <div className="relative shrink-0 -mt-5 pt-2 h-[220px] md:h-[270px] overflow-hidden">
                     <img
                       src={imageSrc}
                       alt={title || "Product image"}
@@ -230,17 +213,17 @@ const ServicesSection = () => {
                       loading="lazy"
                       className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/90 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent" />
                   </div>
-                  <div className="p-5">
-                    <h3 className="text-xl lg:text-2xl font-semibold text-brand-brown leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[#6b3b22]">
+                  <div className="flex flex-1 flex-col p-4 md:p-5">
+                    <h3 className="min-h-[2.5em] text-lg md:text-xl font-semibold text-brand-brown leading-tight transition-colors duration-300 group-hover:text-[#6b3b22]">
                       {title}
                     </h3>
-                    <div className="mt-4 flex items-center justify-between gap-3">
-                      <span className="text-base font-bold text-[#7a4326]">
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <span className="text-sm md:text-base font-bold text-[#7a4326]">
                         {formatPrice(item.price)}
                       </span>
-                      <span className="text-xs px-3 py-1.5 border border-[#6b3b22] rounded-full bg-[#f3e7dc] text-brand-brown whitespace-nowrap transition-all duration-300 group-hover:bg-[#6b3b22] group-hover:text-white">
+                      <span className="text-xs px-2.5 py-1 md:px-3 md:py-1.5 border border-[#6b3b22] rounded-full bg-[#f3e7dc] text-brand-brown whitespace-nowrap transition-all duration-300 group-hover:bg-[#6b3b22] group-hover:text-white">
                         {item.category}
                       </span>
                     </div>
@@ -248,7 +231,7 @@ const ServicesSection = () => {
                       type="button"
                       onClick={(e) => handleAddToCart(e, item)}
                       disabled={isAdding}
-                      className={`mt-5 w-full h-12 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${
+                      className={`mt-3 sm:mt-5 pt-4 w-full h-11 md:h-12 rounded-xl md:rounded-2xl font-semibold text-sm md:text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${
                         isAdded ? "bg-green-500 text-white" : "btn-gradient-slide text-white"
                       } ${isAdding ? "opacity-90 cursor-not-allowed" : ""}`}
                     >

@@ -33,7 +33,7 @@ const GallerySection = () => {
       : src;
 
   return (
-    <section className="bg-[#e8d5be] py-10 md:py-14 mx-2 md:mx-6 xl:mx-16 rounded-tl-[50px] md:rounded-tl-[100px] rounded-br-[50px] md:rounded-br-[100px]">
+    <section className="bg-[#e8d5be] py-10 md:py-14 md:px-14 mx-2 md:mx-6 xl:mx-16 rounded-tl-[50px] md:rounded-tl-[100px] rounded-br-[50px] md:rounded-br-[100px]">
       <div className="max-w-frame mx-auto px-4 xl:px-0">
       {/* Header */}
       <div className="flex items-end justify-between mb-8 md:mb-10">
