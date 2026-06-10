@@ -19,6 +19,8 @@ export type RawProductItem = {
   image_urls: string;
   category_name: string;
   stock_status_label: string;
+  alreadyInCart?: boolean;
+  cartQuantity?: string;
 };
 
 export type HomeProduct = {
@@ -32,6 +34,8 @@ export type HomeProduct = {
   price: number;
   category: string;
   stockStatus: string;
+  alreadyInCart: boolean;
+  cartQuantity: number;
 };
 
 const stripHtml = (value: string) =>
@@ -59,10 +63,20 @@ const toHomeProduct = (item: RawProductItem): HomeProduct => ({
   price: Number(item.price || 0),
   category: item.category_name,
   stockStatus: item.stock_status_label,
+  alreadyInCart: Boolean(item.alreadyInCart),
+  cartQuantity: Number(item.cartQuantity || 0),
 });
 
 export const getProducts = async (): Promise<HomeProduct[]> => {
-  const response = await apiGet<ApiBaseResponse<RawProductItem>>("/get_product");
+  const userId =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")?.replace(/"/g, "")
+      : null;
+
+  const response = await apiGet<ApiBaseResponse<RawProductItem>>(
+    "/get_product",
+    userId ? { user_id: userId } : undefined,
+  );
   return (response.data || []).map(toHomeProduct);
 };
 

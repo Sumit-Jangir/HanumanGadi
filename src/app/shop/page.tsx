@@ -8,7 +8,7 @@ import { useLanguageStore, type AppLanguage } from "@/lib/stores/languageStore";
 import Image from "next/image";
 import useAuthStore from "@/lib/stores/authStore";
 import { useCartStore } from "@/lib/stores/cartStore";
-import { FiCheckCircle, FiLoader } from "react-icons/fi";
+import ProductCartAction from "@/components/product/ProductCartAction";
 
 const SKELETON_COUNT = 3;
 const ADDED_FEEDBACK_MS = 1500;
@@ -22,6 +22,7 @@ const copy = {
     cta: "Add to Cart",
     adding: "Adding...",
     added: "Added!",
+    yagyaInCart: "Already in cart",
     empty: "No products available right now.",
   },
   hi: {
@@ -29,6 +30,7 @@ const copy = {
     cta: "कार्ट में जोड़ें",
     adding: "जोड़ा जा रहा है...",
     added: "जुड़ गया!",
+    yagyaInCart: "पहले से कार्ट में है",
     empty: "अभी कोई उत्पाद उपलब्ध नहीं है।",
   },
 } as const;
@@ -72,9 +74,17 @@ type ShopProductCardProps = {
   index: number;
   language: AppLanguage;
   labels: ShopCopy;
-  isAdding: boolean;
+  isUpdating: boolean;
   isAdded: boolean;
   onAddToCart: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: HomeProduct
+  ) => void;
+  onIncreaseQty: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: HomeProduct
+  ) => void;
+  onDecreaseQty: (
     e: React.MouseEvent<HTMLButtonElement>,
     item: HomeProduct
   ) => void;
@@ -86,9 +96,11 @@ const ShopProductCard = memo(function ShopProductCard({
   index,
   language,
   labels,
-  isAdding,
+  isUpdating,
   isAdded,
   onAddToCart,
+  onIncreaseQty,
+  onDecreaseQty,
   onNavigate,
 }: ShopProductCardProps) {
   const title = getLocalizedTitle(item, language);
@@ -134,28 +146,18 @@ const ShopProductCard = memo(function ShopProductCard({
           </span>
         </div>
 
-        <motion.button
-          type="button"
-          onClick={(e) => onAddToCart(e, item)}
-          disabled={isAdding}
-          className={`mt-5 w-full h-12 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${
-            isAdded ? "bg-green-500 text-white" : "btn-gradient-slide text-white"
-          } ${isAdding ? "opacity-90 cursor-not-allowed" : ""}`}
-        >
-          {isAdding ? (
-            <>
-              <FiLoader className="animate-spin" size={18} />
-              {labels.adding}
-            </>
-          ) : isAdded ? (
-            <>
-              <FiCheckCircle size={18} />
-              {labels.added}
-            </>
-          ) : (
-            labels.cta
-          )}
-        </motion.button>
+        <div className="mt-5 w-full flex justify-center">
+          <ProductCartAction
+            item={item}
+            labels={labels}
+            isUpdating={isUpdating}
+            isAdded={isAdded}
+            onAdd={(e) => onAddToCart(e, item)}
+            onIncrease={(e) => onIncreaseQty(e, item)}
+            onDecrease={(e) => onDecreaseQty(e, item)}
+            className="w-full"
+          />
+        </div>
       </div>
     </motion.article>
   );
@@ -165,15 +167,20 @@ export default function ShopPage() {
   const { language } = useLanguageStore();
   const router = useRouter();
   const { isLoggedIn, openLogin } = useAuthStore();
-  const { addToCart } = useCartStore();
+  const { addToCart, removeFromCart } = useCartStore();
 
   const [items, setItems] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [addingId, setAddingId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [addedId, setAddedId] = useState<string | null>(null);
 
   const addedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const t = copy[language];
+
+  const loadProducts = useCallback(async () => {
+    const data = await getHomeServices();
+    setItems(data);
+  }, []);
 
   const handleNavigate = useCallback(
     (slug: string) => {
@@ -196,10 +203,11 @@ export default function ShopPage() {
       if (!productId) return;
 
       try {
-        setAddingId(productId);
+        setUpdatingId(productId);
         setAddedId(null);
 
         await addToCart(productId, "1");
+        await loadProducts();
 
         setAddedId(productId);
 
@@ -214,19 +222,78 @@ export default function ShopPage() {
       } catch (error) {
         console.error("Add to cart failed:", error);
       } finally {
-        setAddingId(null);
+        setUpdatingId(null);
       }
     },
-    [addToCart, isLoggedIn, openLogin]
+    [addToCart, isLoggedIn, loadProducts, openLogin]
+  );
+
+  const handleIncreaseQty = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>, item: HomeProduct) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!isLoggedIn) {
+        openLogin();
+        return;
+      }
+
+      const productId = item.slug;
+      if (!productId) return;
+
+      const nextQty = (item.cartQuantity || 1) + 1;
+
+      try {
+        setUpdatingId(productId);
+        await addToCart(productId, String(nextQty));
+        await loadProducts();
+      } catch (error) {
+        console.error("Increase quantity failed:", error);
+      } finally {
+        setUpdatingId(null);
+      }
+    },
+    [addToCart, isLoggedIn, loadProducts, openLogin]
+  );
+
+  const handleDecreaseQty = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>, item: HomeProduct) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!isLoggedIn) {
+        openLogin();
+        return;
+      }
+
+      const productId = item.slug;
+      if (!productId) return;
+
+      const currentQty = item.cartQuantity || 1;
+
+      try {
+        setUpdatingId(productId);
+
+        if (currentQty <= 1) {
+          await removeFromCart(productId, "1");
+        } else {
+          await addToCart(productId, String(currentQty - 1));
+        }
+
+        await loadProducts();
+      } catch (error) {
+        console.error("Decrease quantity failed:", error);
+      } finally {
+        setUpdatingId(null);
+      }
+    },
+    [addToCart, isLoggedIn, loadProducts, openLogin, removeFromCart]
   );
 
   useEffect(() => {
     let active = true;
 
-    getHomeServices()
-      .then((data) => {
-        if (active) setItems(data);
-      })
+    loadProducts()
       .catch(() => {
         if (active) setItems([]);
       })
@@ -237,7 +304,7 @@ export default function ShopPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [isLoggedIn, loadProducts]);
 
   useEffect(() => {
     return () => {
@@ -290,9 +357,11 @@ export default function ShopPage() {
                 index={index}
                 language={language}
                 labels={t}
-                isAdding={addingId === item.slug}
+                isUpdating={updatingId === item.slug}
                 isAdded={addedId === item.slug}
                 onAddToCart={handleAddToCart}
+                onIncreaseQty={handleIncreaseQty}
+                onDecreaseQty={handleDecreaseQty}
                 onNavigate={handleNavigate}
               />
             ))}

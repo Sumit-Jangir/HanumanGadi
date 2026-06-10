@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { getHomeServices, HomeProduct } from "@/services/product";
 import { useLanguageStore } from "@/lib/stores/languageStore";
 import useAuthStore from "@/lib/stores/authStore";
 import { useCartStore } from "@/lib/stores/cartStore";
-import { FiCheckCircle, FiLoader } from "react-icons/fi";
+import ProductCartAction from "@/components/product/ProductCartAction";
 
 const copy = {
   en: {
@@ -16,6 +16,7 @@ const copy = {
     cta: "Add to Cart",
     adding: "Adding...",
     added: "Added!",
+    yagyaInCart: "Already in cart",
     empty: "No services available right now.",
   },
   hi: {
@@ -24,6 +25,7 @@ const copy = {
     cta: "कार्ट में जोड़ें",
     adding: "जोड़ा जा रहा है...",
     added: "जुड़ गया!",
+    yagyaInCart: "पहले से कार्ट में है",
     empty: "अभी कोई सेवा उपलब्ध नहीं है।",
   },
 };
@@ -40,29 +42,32 @@ const ServicesSection = () => {
   const [items, setItems] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const { isLoggedIn, openLogin } = useAuthStore();
-  const { addToCart } = useCartStore();
-  const [addingId, setAddingId] = useState<string | null>(null);
+  const { addToCart, removeFromCart } = useCartStore();
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [addedId, setAddedId] = useState<string | null>(null);
   const router = useRouter();
   const t = copy[language];
 
+  const loadProducts = useCallback(async () => {
+    const data = await getHomeServices();
+    setItems(data);
+  }, []);
+
   useEffect(() => {
     let active = true;
-    const load = async () => {
-      try {
-        const data = await getHomeServices();
-        if (active) setItems(data);
-      } catch (error) {
+
+    loadProducts()
+      .catch(() => {
         if (active) setItems([]);
-      } finally {
+      })
+      .finally(() => {
         if (active) setLoading(false);
-      }
-    };
-    load();
+      });
+
     return () => {
       active = false;
     };
-  }, []);
+  }, [isLoggedIn, loadProducts]);
 
   const services = useMemo(() => items.slice(0, 3), [items]);
 
@@ -79,9 +84,10 @@ const ServicesSection = () => {
     const productId = item?.slug;
     if (!productId) return;
     try {
-      setAddingId(productId);
+      setUpdatingId(productId);
       setAddedId(null);
       await addToCart(productId, "1");
+      await loadProducts();
       setAddedId(productId);
       setTimeout(() => {
         setAddedId(null);
@@ -89,7 +95,69 @@ const ServicesSection = () => {
     } catch (error) {
       console.error("Add to cart failed:", error);
     } finally {
-      setAddingId(null);
+      setUpdatingId(null);
+    }
+  };
+
+  const handleIncreaseQty = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: HomeProduct
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isLoggedIn) {
+      openLogin();
+      return;
+    }
+
+    const productId = item.slug;
+    if (!productId) return;
+
+    const nextQty = (item.cartQuantity || 1) + 1;
+
+    try {
+      setUpdatingId(productId);
+      await addToCart(productId, String(nextQty));
+      await loadProducts();
+    } catch (error) {
+      console.error("Increase quantity failed:", error);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleDecreaseQty = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    item: HomeProduct
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isLoggedIn) {
+      openLogin();
+      return;
+    }
+
+    const productId = item.slug;
+    if (!productId) return;
+
+    const currentQty = item.cartQuantity || 1;
+
+    try {
+      setUpdatingId(productId);
+
+      if (currentQty <= 1) {
+        await removeFromCart(productId, "1");
+      } else {
+        await addToCart(productId, String(currentQty - 1));
+      }
+
+      await loadProducts();
+    } catch (error) {
+      console.error("Decrease quantity failed:", error);
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -146,7 +214,7 @@ const ServicesSection = () => {
               item.image && item.image.startsWith("http")
                 ? `/api/image-proxy?url=${encodeURIComponent(item.image)}`
                 : "/banners/AstrologerContactUs.png";
-            const isAdding = addingId === item.slug;
+            const isUpdating = updatingId === item.slug;
             const isAdded = addedId === item.slug;
             return (
               <motion.article
@@ -184,22 +252,19 @@ const ServicesSection = () => {
                         </span>
                       </div>
                     </div>
-                    <motion.button
-                      type="button"
-                      onClick={(e) => handleAddToCart(e, item)}
-                      disabled={isAdding}
-                      className={`mt-2 w-full h-8 rounded-xl font-semibold text-xs flex items-center justify-center gap-1 shadow transition-all duration-300 ${
-                        isAdded ? "bg-green-500 text-white" : "btn-gradient-slide text-white"
-                      } ${isAdding ? "opacity-90 cursor-not-allowed" : ""}`}
-                    >
-                      {isAdding ? (
-                        <><FiLoader className="animate-spin" size={14} />{t.adding}</>
-                      ) : isAdded ? (
-                        <><FiCheckCircle size={14} />{t.added}</>
-                      ) : (
-                        t.cta
-                      )}
-                    </motion.button>
+                    <div className="mt-2 w-full flex justify-center">
+                      <ProductCartAction
+                        item={item}
+                        labels={t}
+                        isUpdating={isUpdating}
+                        isAdded={isAdded}
+                        onAdd={(e) => handleAddToCart(e, item)}
+                        onIncrease={(e) => handleIncreaseQty(e, item)}
+                        onDecrease={(e) => handleDecreaseQty(e, item)}
+                        size="sm"
+                        className="w-full"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -227,22 +292,18 @@ const ServicesSection = () => {
                         {item.category}
                       </span>
                     </div>
-                    <motion.button
-                      type="button"
-                      onClick={(e) => handleAddToCart(e, item)}
-                      disabled={isAdding}
-                      className={`mt-3 sm:mt-5 pt-4 w-full h-11 md:h-12 rounded-xl md:rounded-2xl font-semibold text-sm md:text-base flex items-center justify-center gap-2 shadow-md transition-all duration-300 ${
-                        isAdded ? "bg-green-500 text-white" : "btn-gradient-slide text-white"
-                      } ${isAdding ? "opacity-90 cursor-not-allowed" : ""}`}
-                    >
-                      {isAdding ? (
-                        <><FiLoader className="animate-spin" size={18} />{t.adding}</>
-                      ) : isAdded ? (
-                        <><FiCheckCircle size={18} />{t.added}</>
-                      ) : (
-                        t.cta
-                      )}
-                    </motion.button>
+                    <div className="mt-3 sm:mt-5 pt-4 w-full flex justify-center">
+                      <ProductCartAction
+                        item={item}
+                        labels={t}
+                        isUpdating={isUpdating}
+                        isAdded={isAdded}
+                        onAdd={(e) => handleAddToCart(e, item)}
+                        onIncrease={(e) => handleIncreaseQty(e, item)}
+                        onDecrease={(e) => handleDecreaseQty(e, item)}
+                        className="w-full"
+                      />
+                    </div>
                   </div>
                 </div>
               </motion.article>
