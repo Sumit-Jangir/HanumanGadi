@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,7 +9,6 @@ import {
   CalendarDays,
   CreditCard,
   Wallet,
-  Hash,
   ChevronDown,
   ShoppingBag,
   CheckCircle2,
@@ -105,14 +103,15 @@ const Skeleton = () => (
 const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
   const [expanded, setExpanded] = useState(false);
   const status = getStatus(order.orderStatus);
-  const isOnline = order.payment_mode === "1";
+  const isOnline = order.payment_mode === "2";
+  const orderNo = order.order_no || order.order_display_id;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="group rounded-2xl border border-[#e8cdb0] bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+      className="group self-start w-full rounded-2xl border border-[#e8cdb0] bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
     >
       {/* Card header */}
       <div className="flex items-start gap-4 p-4 sm:p-5">
@@ -140,8 +139,11 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
             </span>
           </div>
 
-          <p className="mt-1 text-[13px] text-gray-500 font-mono tracking-wide">
-            #{order.order_display_id}
+          <p className="mt-1.5 text-[13px] text-gray-600">
+            <span className="font-medium">Order No.</span>{" "}
+            <span className="font-mono font-semibold tracking-wide text-brand-brown">
+              #{orderNo}
+            </span>
           </p>
 
           <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
@@ -149,7 +151,7 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
               {formatPrice(order.to_pay)}
             </span>
             <span className="text-xs text-gray-400 line-through">
-              {formatPrice(order.product_price)}
+              {formatPrice(order?.total_amount)}
             </span>
             <span className="text-xs text-gray-500">
               Qty: <span className="font-semibold text-gray-700">{order.quantity}</span>
@@ -171,7 +173,7 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
             ) : (
               <Wallet size={12} className="text-brand-orange" />
             )}
-            {isOnline ? "Online" : "Cash on Delivery"}
+            {isOnline ? "Online Payment" : "Cash on Delivery"}
           </span>
         </div>
 
@@ -218,10 +220,6 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
                 <p className="text-[11px] font-bold uppercase tracking-wider text-brand-orange">
                   Order Info
                 </p>
-                <div className="flex items-center gap-2">
-                  <Hash size={13} className="text-brand-brown shrink-0" />
-                  <span className="font-mono text-xs">{order.order_display_id}</span>
-                </div>
                 <div className="flex items-center gap-2">
                   <Package size={13} className="text-brand-brown shrink-0" />
                   <span>
@@ -335,7 +333,7 @@ export default function OrdersPage() {
 
         {/* Skeletons */}
         {loading && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 items-start">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} />
             ))}
@@ -344,7 +342,7 @@ export default function OrdersPage() {
 
         {/* Orders grid */}
         {!loading && isLoggedIn && !error && orders.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 items-start">
             {orders.map((order, i) => (
               <OrderCard key={order.order_display_id + i} order={order} index={i} />
             ))}

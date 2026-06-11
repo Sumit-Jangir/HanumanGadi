@@ -119,39 +119,31 @@ const UserMenuBtn = () => {
             </div>
 
             {/* Menu body */}
-            <div className="bg-brand-cream/95 backdrop-blur-md px-3 py-3 flex flex-col gap-1">
+            <div className="bg-brand-cream backdrop-blur-md px-3 py-3 flex flex-col gap-3">
               {isLoggedIn ? (
                 <>
                   <motion.div custom={0} variants={itemVariants} initial="hidden" animate="visible">
                     <Link
                       href="/orders"
                       onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-brand-orange-muted hover:text-brand-brown transition-all duration-200 group"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-brown px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-brand-brown-hover"
                     >
-                      <span className="w-8 h-8 rounded-xl bg-brand-orange-muted group-hover:bg-brand-orange/20 flex items-center justify-center transition-colors duration-200 shrink-0">
-                        <ShoppingBag size={15} strokeWidth={1.8} className="text-brand-orange" />
-                      </span>
-                      <span>My Orders</span>
+                      <ShoppingBag size={17} />
+                      My Orders
                     </Link>
                   </motion.div>
 
                   <motion.div custom={1} variants={itemVariants} initial="hidden" animate="visible">
-                    <div className="h-px bg-gray-100 mx-1 my-1" />
-                  </motion.div>
-
-                  <motion.div custom={2} variants={itemVariants} initial="hidden" animate="visible">
                     <button
                       onClick={() => {
                         logout();
                         setOpen(false);
                         router.push("/");
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-orange/40 bg-white px-4 py-3 text-sm font-semibold text-brand-brown transition-colors duration-200 hover:bg-brand-cream-dark"
                     >
-                      <span className="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-red-100 flex items-center justify-center transition-colors duration-200 shrink-0">
-                        <LogOut size={15} strokeWidth={1.8} className="text-gray-400 group-hover:text-red-500" />
-                      </span>
-                      <span>Logout</span>
+                      <LogOut size={17} />
+                      Logout
                     </button>
                   </motion.div>
                 </>
@@ -163,9 +155,9 @@ const UserMenuBtn = () => {
                         setOpen(false);
                         openLogin();
                       }}
-                      className="btn-gradient-slide flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-brown px-4 py-3 text-sm font-semibold text-white shadow-md transition-colors duration-200 hover:bg-brand-brown-hover"
                     >
-                      <LogIn size={15} strokeWidth={2} />
+                      <LogIn size={17} />
                       Login
                     </button>
                   </motion.div>

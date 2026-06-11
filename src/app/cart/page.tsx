@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -333,6 +333,13 @@ export default function CartPage() {
   const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
   const errorClass = "mt-1 text-xs font-medium text-red-500";
 
+  const FieldLabel = ({ children }: { children: ReactNode }) => (
+    <label className={labelClass}>
+      {children}
+      <span className="text-red-500"> *</span>
+    </label>
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -439,7 +446,7 @@ export default function CartPage() {
 
                         <div className="mt-5 space-y-3">
                           <div>
-                            <label className={labelClass}>{t.form.gotra}</label>
+                            <FieldLabel>{t.form.gotra}</FieldLabel>
                             <Field
                               name="gotra"
                               className={inputClass}
@@ -453,7 +460,7 @@ export default function CartPage() {
                           </div>
 
                           <div>
-                            <label className={labelClass}>{t.form.name}</label>
+                            <FieldLabel>{t.form.name}</FieldLabel>
                             <Field
                               name="name"
                               className={inputClass}
@@ -467,7 +474,7 @@ export default function CartPage() {
                           </div>
 
                           <div>
-                            <label className={labelClass}>{t.form.email}</label>
+                            <FieldLabel>{t.form.email}</FieldLabel>
                             <Field
                               name="email"
                               type="email"
@@ -482,7 +489,7 @@ export default function CartPage() {
                           </div>
 
                           <div>
-                            <label className={labelClass}>{t.form.phone}</label>
+                            <FieldLabel>{t.form.phone}</FieldLabel>
                             <Field
                               name="phone"
                               className={inputClass}
@@ -498,9 +505,7 @@ export default function CartPage() {
 
                           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                             <div>
-                              <label className={labelClass}>
-                                {t.form.country}
-                              </label>
+                              <FieldLabel>{t.form.country}</FieldLabel>
                               <Field
                                 name="country"
                                 className={inputClass}
@@ -514,9 +519,7 @@ export default function CartPage() {
                             </div>
 
                             <div>
-                              <label className={labelClass}>
-                                {t.form.state}
-                              </label>
+                              <FieldLabel>{t.form.state}</FieldLabel>
                               <Field
                                 name="state"
                                 className={inputClass}
@@ -530,7 +533,7 @@ export default function CartPage() {
                             </div>
 
                             <div>
-                              <label className={labelClass}>{t.form.city}</label>
+                              <FieldLabel>{t.form.city}</FieldLabel>
                               <Field
                                 name="city"
                                 className={inputClass}
@@ -544,9 +547,7 @@ export default function CartPage() {
                             </div>
 
                             <div>
-                              <label className={labelClass}>
-                                {t.form.zipcode}
-                              </label>
+                              <FieldLabel>{t.form.zipcode}</FieldLabel>
                               <Field
                                 name="zipcode"
                                 className={inputClass}
@@ -562,7 +563,7 @@ export default function CartPage() {
                           </div>
 
                           <div>
-                            <label className={labelClass}>{t.form.address}</label>
+                            <FieldLabel>{t.form.address}</FieldLabel>
                             <Field
                               as="textarea"
                               name="address"

@@ -18,7 +18,7 @@ const LatestEventsSection = () => {
   const hasData = videos.length > 0 || images.length > 0;
   if (!mounted || (loading && !hasData)) {
     return (
-      <div className="bg-gradient-to-b from-[#E8A87C] to-[#D4845C] py-16 md:py-24">
+      <div className="bg-brand-orange py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12">
             Latest Events

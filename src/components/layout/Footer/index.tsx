@@ -8,6 +8,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLanguageStore } from "@/lib/stores/languageStore";
 
+const infoLinks = [
+  { label: "About us", href: "/about-us" },
+  { label: "Contact us", href: "/contact-us" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
+  { label: "Return & Refund Policy", href: "/return-refund-policy" },
+];
+
 const socialsData: SocialNetworks[] = [
   {
     id: 1,
@@ -88,19 +96,13 @@ const Footer = () => {
                 </h3>
 
                 <ul className="space-y-3 text-[15px] md:text-[15px]">
-                  {[
-                    "About us",
-                    "Contact us",
-                    "Privacy Policy",
-                    "Terms & Conditions",
-                    "Return & Refund Policy",
-                  ].map((item) => (
-                    <li key={item}>
+                  {infoLinks.map((item) => (
+                    <li key={item.href}>
                       <Link
-                        href="#"
+                        href={item.href}
                         className="text-[#3b220f] hover:text-[#f28c18] transition-all duration-300 font-medium leading-5"
                       >
-                        {item}
+                        {item.label}
                       </Link>
                     </li>
                   ))}
