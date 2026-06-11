@@ -238,7 +238,7 @@ const ServicesSection = () => {
                       className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
-                  <div className="flex flex-col justify-between flex-1 min-w-0">
+                  <div className="flex flex-col justify-evenly flex-1 min-w-0">
                     <div>
                       <h3 className="text-sm font-semibold text-brand-brown leading-snug line-clamp-2 group-hover:text-[#6b3b22] transition-colors duration-300">
                         {title}
@@ -281,7 +281,7 @@ const ServicesSection = () => {
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent" />
                   </div>
                   <div className="flex flex-1 flex-col p-4 md:p-5">
-                    <h3 className="min-h-[2.5em] text-lg md:text-xl font-semibold text-brand-brown leading-tight transition-colors duration-300 group-hover:text-[#6b3b22]">
+                    <h3 className="text-lg md:text-xl font-semibold text-brand-brown leading-tight transition-colors duration-300 group-hover:text-[#6b3b22]">
                       {title}
                     </h3>
                     <div className="mt-3 flex items-center justify-between gap-3">
@@ -292,7 +292,7 @@ const ServicesSection = () => {
                         {item.category}
                       </span>
                     </div>
-                    <div className="mt-3 sm:mt-5 pt-4 w-full flex justify-center">
+                    <div className="mt-3 sm:mt-5w-full flex justify-center">
                       <ProductCartAction
                         item={item}
                         labels={t}

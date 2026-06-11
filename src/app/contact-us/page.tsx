@@ -8,7 +8,7 @@ import Joi from "joi";
 import { saveContactUs } from "@/services/contact";
 import {
   FaFacebookF,
-  FaTwitter,
+  // FaTwitter,
   FaInstagram,
   FaYoutube,
   FaPhone,
@@ -398,22 +398,22 @@ export default function ContactUsPage() {
                 {[
                   {
                     icon: FaFacebookF,
-                    href: "#",
+                    href: "https://www.facebook.com/hanumangadiayodhyaa/",
                     label: "Facebook",
                   },
-                  {
-                    icon: FaTwitter,
-                    href: "#",
-                    label: "Twitter",
-                  },
+                  // {
+                  //   icon: FaTwitter,
+                  //   href: "#",
+                  //   label: "Twitter",
+                  // },
                   {
                     icon: FaInstagram,
-                    href: "#",
+                    href: "https://www.instagram.com/shriramlalaayodhyajisewasamiti?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D",
                     label: "Instagram",
                   },
                   {
                     icon: FaYoutube,
-                    href: "#",
+                    href: "https://www.youtube.com/@hanumangadiayodhyaa",
                     label: "YouTube",
                   },
                 ].map(({ icon: Icon, href, label }) => (

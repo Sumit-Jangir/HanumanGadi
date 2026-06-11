@@ -2,7 +2,8 @@
 
 import React from "react";
 import { SocialNetworks } from "./footer.types";
-import { FaEnvelope, FaFacebookF, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaEnvelope, FaFacebookF, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaYoutube } from "react-icons/fa";
+// import { FaTwitter } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguageStore } from "@/lib/stores/languageStore";
@@ -11,22 +12,22 @@ const socialsData: SocialNetworks[] = [
   {
     id: 1,
     icon: <FaFacebookF />,
-    url: "https://facebook.com",
+    url: "https://www.facebook.com/hanumangadiayodhyaa/",
   },
-  {
-    id: 2,
-    icon: <FaTwitter />,
-    url: "https://twitter.com",
-  },
+  // {
+  //   id: 2,
+  //   icon: <FaTwitter />,
+  //   url: "https://twitter.com",
+  // },
   {
     id: 3,
     icon: <FaInstagram />,
-    url: "https://instagram.com",
+    url: "https://www.instagram.com/shriramlalaayodhyajisewasamiti?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D",
   },
   {
     id: 4,
     icon: <FaYoutube />,
-    url: "https://youtube.com",
+    url: "https://www.youtube.com/@hanumangadiayodhyaa",
   },
 ];
 
@@ -162,7 +163,7 @@ const Footer = () => {
 
                 <div className="flex flex-col gap-3">
                   <Link
-                    href="https://play.google.com"
+                    href="https://play.google.com/store/apps/details?id=com.hanumangadi.hanumangadi&pli=1"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="transition-transform duration-300 hover:scale-105 w-fit"
@@ -177,7 +178,7 @@ const Footer = () => {
                   </Link>
 
                   <Link
-                    href="https://www.apple.com/app-store/"
+                    href="https://apps.apple.com/in/app/hanumangadi/id6670725280"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="transition-transform duration-300 hover:scale-105 w-fit"
@@ -209,6 +210,7 @@ const Footer = () => {
                 {socialsData.map((social) => (
                   <Link
                     href={social.url}
+                    target="_blank"
                     key={social.id}
                     className="bg-white/25 hover:bg-[#f28c18] hover:text-[#2f1a0d] transition-all duration-300 w-10 h-10 rounded-xl border border-white/40 flex items-center justify-center text-[#2f1a0d] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(242,140,24,0.35)] backdrop-blur-sm"
                   >

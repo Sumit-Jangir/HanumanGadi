@@ -132,7 +132,7 @@ const ShopProductCard = memo(function ShopProductCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="min-h-[2.5em] text-xl sm:text-2xl font-semibold text-brand-brown leading-tight transition-colors duration-300 group-hover:text-[#6b3b22]">
+        <h3 className="text-xl sm:text-2xl font-semibold text-brand-brown leading-tight transition-colors duration-300 group-hover:text-[#6b3b22]">
           {title}
         </h3>
 
