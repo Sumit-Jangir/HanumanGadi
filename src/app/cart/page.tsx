@@ -259,18 +259,18 @@ export default function CartPage() {
     );
   }, 0);
 
-  const hasShaadiYagya = cartItems.some(
-    (item) => item.name?.toLowerCase() === "shaadi yagya"
+  const hasYagya = cartItems.some(
+    (item) => item.category_name.toLowerCase() === "yagya"
   );
 
   useEffect(() => {
-    if (hasShaadiYagya && paymentMode === "cod") {
+    if (hasYagya && paymentMode === "cod") {
       setPaymentMode("online");
     }
-  }, [hasShaadiYagya, paymentMode]);
+  }, [hasYagya, paymentMode]);
 
   const selectedSummary =
-    paymentMode === "cod" && !hasShaadiYagya ? totalCod : totalOnline;
+    paymentMode === "cod" && !hasYagya ? totalCod : totalOnline;
 
   const shipping = Number(selectedSummary?.shipping || 0);
 
@@ -278,7 +278,7 @@ export default function CartPage() {
     Number(selectedSummary?.totalPayAmount || 0) || subtotal + shipping;
 
   const codCharges =
-    paymentMode === "cod" && !hasShaadiYagya
+    paymentMode === "cod" && !hasYagya
       ? cartItems.reduce((acc, item) => acc + Number(item.codCharges || 0), 0)
       : 0;
 
@@ -604,16 +604,16 @@ export default function CartPage() {
                       <button
                         type="button"
                         className={`flex-1 py-3 rounded-xl font-semibold border transition-colors ${
-                          paymentMode === "cod" && !hasShaadiYagya
+                          paymentMode === "cod" && !hasYagya
                             ? "bg-brand-brown text-white border-brand-brown"
                             : "bg-white text-brand-brown border-brand-brown/40"
                         } ${
-                          hasShaadiYagya ? "opacity-50 cursor-not-allowed" : ""
+                          hasYagya ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                         onClick={() => {
-                          if (!hasShaadiYagya) setPaymentMode("cod");
+                          if (!hasYagya) setPaymentMode("cod");
                         }}
-                        disabled={hasShaadiYagya}
+                        disabled={hasYagya}
                       >
                         {t.codPayment}
                       </button>

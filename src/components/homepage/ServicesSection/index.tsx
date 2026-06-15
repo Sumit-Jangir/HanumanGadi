@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { ShoppingBag } from "lucide-react";
 import { getHomeServices, HomeProduct } from "@/services/product";
 import { useLanguageStore } from "@/lib/stores/languageStore";
 import useAuthStore from "@/lib/stores/authStore";
@@ -18,6 +19,7 @@ const copy = {
     added: "Added!",
     yagyaInCart: "Already in cart",
     empty: "No services available right now.",
+    viewAll: "View All",
   },
   hi: {
     title: "हमारी सेवाएं",
@@ -27,6 +29,7 @@ const copy = {
     added: "जुड़ गया!",
     yagyaInCart: "पहले से कार्ट में है",
     empty: "अभी कोई सेवा उपलब्ध नहीं है।",
+    viewAll: "सभी देखें",
   },
 };
 
@@ -163,11 +166,22 @@ const ServicesSection = () => {
 
   return (
     <section className="max-w-frame mx-auto px-4 xl:px-0 py-10 md:py-14">
-      <div className="mb-8 md:mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-brand-brown">
-          {t.title}
-        </h2>
-        <p className="text-base text-brand-brown/80 mt-1">{t.subtitle}</p>
+      <div className="flex items-end justify-between mb-8 md:mb-10">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-brand-brown">
+            {t.title}
+          </h2>
+          <p className="text-base text-brand-brown/80 mt-1">{t.subtitle}</p>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => router.push("/shop")}
+          className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full btn-gradient-slide text-white text-sm font-semibold shadow-md"
+        >
+          <ShoppingBag size={16} />
+          {t.viewAll}
+        </motion.button>
       </div>
 
       {loading ? (
@@ -311,6 +325,18 @@ const ServicesSection = () => {
           })}
         </div>
       )}
+
+      <div className="mt-6 flex sm:hidden justify-center">
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => router.push("/shop")}
+          className="flex items-center gap-2 px-6 py-3 rounded-full btn-gradient-slide text-white text-sm font-semibold shadow-md"
+        >
+          <ShoppingBag size={16} />
+          {t.viewAll}
+        </motion.button>
+      </div>
     </section>
   );
 };
