@@ -166,18 +166,18 @@ const ServicesSection = () => {
 
   return (
     <section className="max-w-frame mx-auto px-4 xl:px-0 py-10 md:py-14">
-      <div className="flex items-end justify-between mb-8 md:mb-10">
-        <div>
+      <div className="flex items-center justify-between gap-3 mb-8 md:mb-10">
+        <div className="min-w-0">
           <h2 className="text-3xl md:text-4xl font-bold text-brand-brown">
             {t.title}
           </h2>
-          <p className="text-base text-brand-brown/80 mt-1">{t.subtitle}</p>
+          <p className="hidden md:block text-base text-brand-brown/80 mt-1">{t.subtitle}</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => router.push("/shop")}
-          className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full btn-gradient-slide text-white text-sm font-semibold shadow-md"
+          className="shrink-0 flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full btn-gradient-slide text-white text-sm font-semibold shadow-md"
         >
           <ShoppingBag size={16} />
           {t.viewAll}
@@ -306,7 +306,7 @@ const ServicesSection = () => {
                         {item.category}
                       </span>
                     </div>
-                    <div className="mt-3 sm:mt-5w-full flex justify-center">
+                    <div className="mt-3 sm:mt-5 w-full flex justify-center">
                       <ProductCartAction
                         item={item}
                         labels={t}
@@ -325,18 +325,6 @@ const ServicesSection = () => {
           })}
         </div>
       )}
-
-      <div className="mt-6 flex sm:hidden justify-center">
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => router.push("/shop")}
-          className="flex items-center gap-2 px-6 py-3 rounded-full btn-gradient-slide text-white text-sm font-semibold shadow-md"
-        >
-          <ShoppingBag size={16} />
-          {t.viewAll}
-        </motion.button>
-      </div>
     </section>
   );
 };

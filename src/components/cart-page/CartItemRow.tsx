@@ -100,7 +100,7 @@ export default function CartItemRow({
     }
   };
 
-  const isShaadiYagya = item.name?.toLowerCase() === "shaadi yagya";
+  const isYagya = item.category_name?.toLowerCase() === "yagya";
 
   return (
     <motion.div
@@ -133,7 +133,7 @@ export default function CartItemRow({
           >
             {item.name}
 
-            {isShaadiYagya && (
+            {isYagya && (
               <span className="mt-1 block text-sm font-medium text-brand-brown">
                 Booking Amount: {formatPrice(unitPrice)}
               </span>
@@ -153,7 +153,7 @@ export default function CartItemRow({
           </div>
 
           <div className="mt-3 flex items-center gap-3 lg:hidden">
-            {!isShaadiYagya && (
+            {!isYagya && (
                 <QuantityControl
                   qty={qty}
                   onDecrease={() => handleQty(Math.max(1, qty - 1))}
@@ -178,7 +178,7 @@ export default function CartItemRow({
         </div>
 
         <div className="hidden flex-shrink-0 flex-col items-end gap-3 lg:flex">
-          {!isShaadiYagya && (
+          {!isYagya && (
             <div>
               {/* <p className="mb-1 text-right text-xs font-semibold uppercase tracking-wider text-gray-400">
                 {labels.quantity}
