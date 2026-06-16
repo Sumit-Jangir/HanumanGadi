@@ -31,6 +31,7 @@ const content = {
     quoteText:
       "The HanumanGadi team that works in his guidance consists of many expert astrologers pertaining to different schools of astrology.",
     contactUs: "Contact Us",
+    orgName: "Hanumangadi Dot Com",
     address: ["Shri Ram Satsang Bhawan Choti Chhavni", "Ayodhya, 224001"],
   },
   hi: {
@@ -57,6 +58,7 @@ const content = {
     quoteText:
       "उनके मार्गदर्शन में काम करने वाली हनुमानगादी टीम में ज्योतिष के विभिन्न विद्यालयों से संबंधित कई विशेषज्ञ ज्योतिषी शामिल हैं।",
     contactUs: "संपर्क करें",
+    orgName: "हनुमानगढ़ी डॉट कॉम",
     address: ["श्री राम सत्संग भवन छोटी छावनी", "अयोध्या, 224001"],
   },
 };
@@ -276,73 +278,79 @@ export default function AboutUsPage() {
       {/* ══════════ CONTACT / QUOTE SECTION ══════════ */}
       <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative rounded-3xl overflow-hidden"
+          transition={{ duration: 0.75 }}
+          className="relative overflow-hidden rounded-[28px] md:rounded-[32px] shadow-[0_20px_50px_rgba(97,52,28,0.22)]"
         >
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-700 via-orange-600 to-amber-600" />
+          {/* Brand gradient background */}
           <div
-            className="absolute inset-0 opacity-10"
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--brand-brown) 0%, #8b4518 45%, var(--brand-orange) 100%)",
+            }}
+          />
+          {/* Cross pattern overlay */}
+          <div
+            className="absolute inset-0 opacity-[0.08]"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
           />
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 p-6 sm:p-8 md:p-12 lg:p-16">
-            {/* Left quote text */}
-            <div className="flex-1 text-white">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-              >
-                {/* <p className="text-2xl font-light italic opacity-20 leading-none">"</p> */}
-                <p className="text-xl md:text-2xl font-semibold leading-relaxed">
-                  {t.quoteText}
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Right contact card */}
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12 p-7 sm:p-9 md:p-12 lg:p-14">
+            {/* Left — quote */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-white min-w-[260px]"
+              transition={{ duration: 0.65 }}
+              className="flex-1 text-white"
             >
-              <p className="text-xs uppercase tracking-widest font-bold opacity-70 mb-4">
+              <p className="text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed md:leading-[1.65]">
+                {t.quoteText}
+              </p>
+            </motion.div>
+
+            {/* Right — contact card */}
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, delay: 0.15 }}
+              className="w-full lg:w-[300px] xl:w-[320px] shrink-0 rounded-2xl border border-white/25 bg-white/15 backdrop-blur-md p-6 sm:p-7 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/75 mb-4">
                 {t.contactUs}
               </p>
-              <div className="space-y-3 text-sm leading-relaxed">
-                <p className="font-bold text-base">Hanumangadi Dot Com</p>
-                <p className="opacity-80">
-                  {t.address[0]}
-                  <br />
-                  {t.address[1]}
-                </p>
-                <div className="flex items-start gap-3">
-                  <FaPhoneAlt className="mt-1 shrink-0" />
-                  <a
-                    href="tel:+919876543210"
-                    className="text-white "
-                  >
-                    +91 9876543210
-                  </a>
-                </div>
-                <div className="flex items-start gap-3">
-                  <FaEnvelope className="mt-1.5 shrink-0" />
-                  <a
-                    href="mailto:hanumangadiayodhya@gmail.com"
-                    className="text-white"
-                  >
-                    hanumangadiayodhya@gmail.com
-                  </a>
-                </div>
+
+              <p className="text-base font-bold mb-3">{t.orgName}</p>
+
+              <p className="text-sm leading-relaxed text-white/85 mb-4">
+                {t.address[0]}, {t.address[1]}
+              </p>
+
+              <div className="space-y-2.5 text-sm">
+                <a
+                  href="tel:+919876543210"
+                  className="flex items-center gap-2.5 text-white/90 transition-colors hover:text-white"
+                >
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15">
+                    <FaPhoneAlt className="text-xs" />
+                  </span>
+                  +91 9876543210
+                </a>
+                <a
+                  href="mailto:hanumangadiayodhya@gmail.com"
+                  className="flex items-center gap-2.5 text-white/90 transition-colors hover:text-white break-all"
+                >
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15">
+                    <FaEnvelope className="text-xs" />
+                  </span>
+                  hanumangadiayodhya@gmail.com
+                </a>
               </div>
             </motion.div>
           </div>
