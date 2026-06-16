@@ -8,8 +8,29 @@ import Providers from "./providers";
 import LoginModal from "@/components/auth/LoginModal";
 
 export const metadata: Metadata = {
-  title: "Hanuman Gadi",
-  description: "Hanuman Gadi - श्री रामसत्संग भवन अयोध्या",
+  metadataBase: new URL("https://hanumangadi.com"),
+  title: {
+    default: "Hanumangadi",
+    template: "%s | Hanumangadi",
+  },
+  description:
+    "Authentic Vedic astrology, spiritual services, and yantras from Shri Ram Satsang Bhavan, Ayodhya. श्री रामसत्संग भवन, अयोध्या",
+  applicationName: "Hanumangadi",
+  icons: {
+    icon: "/logo/logo.svg",
+    shortcut: "/logo/logo.svg",
+    apple: "/logo/logo.svg",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://hanumangadi.com",
+    siteName: "Hanumangadi",
+    title: "Hanumangadi",
+    description:
+      "Authentic Vedic astrology, spiritual services, and yantras from Shri Ram Satsang Bhavan, Ayodhya.",
+    images: [{ url: "/logo/logo.svg", alt: "Hanumangadi" }],
+  },
 };
 
 export const viewport: Viewport = {

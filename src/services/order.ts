@@ -1,26 +1,56 @@
 import { apiGet, fetcher } from "@/utils/api";
 
-export interface OrderItem {
-  orderStatus: string;
+export interface OrderLineItem {
   product_name: string;
   product_price: string;
   product_image_link: string;
   quantity: string;
-  total_amount: string;
-  to_pay: string;
-  order_date: string;
-  order_no: string;
-  order_display_id: string;
-  encoded_order_id: string;
-  payment_mode: string;
+  total_amount: number | string;
+  cod_advance?: number | string;
+  total_cod_advance?: number | string;
+  category_name?: string;
+}
+
+export interface OrderShipping {
+  name: string;
   address: string;
   city: string;
   state: string;
   pincode: string;
   country: string;
+  shipping_charge: number;
 }
 
-export const getOrderHistory = async (): Promise<{ msg: string; status: boolean; data: OrderItem[] }> => {
+export interface OrderPricing {
+  items_total: number;
+  shipping_charge: number;
+  cod_advance: number;
+  total_amount: number;
+  paid_amount: number;
+  pending_amount: number;
+}
+
+export interface Order {
+  order_no: string;
+  order_display_id: string;
+  orderStatus: string;
+  order_date: string;
+  payment_mode: string;
+  shipping: OrderShipping;
+  items: OrderLineItem[];
+  pricing: OrderPricing;
+}
+
+export interface OrderHistoryResponse {
+  msg: string;
+  status: boolean;
+  orders: Order[];
+}
+
+export const isCodPayment = (mode: string) => mode === "1";
+export const isOnlinePayment = (mode: string) => mode === "2";
+
+export const getOrderHistory = async (): Promise<OrderHistoryResponse> => {
   let token = "";
   if (typeof window !== "undefined") {
     token = localStorage.getItem("token")?.replace(/"/g, "") || "";
@@ -44,7 +74,7 @@ export interface CreateOrderPayload {
   country: string;
   pincode: string;
   address: string;
-  payment_mode: string; // '1' for online, '2' for COD
+  payment_mode: string; // '1' for COD, '2' for online
   cod_advance: string;
   yagya?: string;
 }
@@ -57,7 +87,6 @@ export const createOrderApi = async (
     formData.append(key, value);
   });
 
-  // Get token from localStorage
   let token = "";
   if (typeof window !== "undefined") {
     token = localStorage.getItem("token")?.replace(/"/g, "") || "";

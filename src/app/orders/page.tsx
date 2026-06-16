@@ -12,13 +12,17 @@ import {
   ChevronDown,
   ShoppingBag,
   CheckCircle2,
-  XCircle,
   Clock,
+  User,
 } from "lucide-react";
 import useAuthStore from "@/lib/stores/authStore";
-import { getOrderHistory, OrderItem } from "@/services/order";
-
-// ─── helpers ──────────────────────────────────────────────────────────────────
+import {
+  getOrderHistory,
+  isCodPayment,
+  isOnlinePayment,
+  Order,
+  OrderLineItem,
+} from "@/services/order";
 
 const formatPrice = (val: string | number) =>
   new Intl.NumberFormat("en-IN", {
@@ -40,37 +44,28 @@ const formatDate = (raw: string) => {
 const proxyImage = (url: string) =>
   url ? `/api/image-proxy?url=${encodeURIComponent(url)}` : "/images/placeholder.png";
 
-// ─── status config ────────────────────────────────────────────────────────────
-
 const STATUS_MAP: Record<
   string,
   { label: string; icon: React.ReactNode; bg: string; text: string; border: string }
 > = {
-  success: {
-    label: "Delivered",
+  "fully paid": {
+    label: "Fully Paid",
     icon: <CheckCircle2 size={13} strokeWidth={2.2} />,
     bg: "bg-emerald-50",
     text: "text-emerald-700",
     border: "border-emerald-200",
   },
-  pending: {
-    label: "Pending",
+  "partial payment": {
+    label: "Partial Payment",
     icon: <Clock size={13} strokeWidth={2.2} />,
     bg: "bg-amber-50",
     text: "text-amber-700",
     border: "border-amber-200",
   },
-  fail: {
-    label: "Failed",
-    icon: <XCircle size={13} strokeWidth={2.2} />,
-    bg: "bg-red-50",
-    text: "text-red-600",
-    border: "border-red-200",
-  },
 };
 
 const getStatus = (raw: string) =>
-  STATUS_MAP[raw?.toLowerCase()] ?? {
+  STATUS_MAP[raw?.trim().toLowerCase()] ?? {
     label: raw ?? "Unknown",
     icon: <Clock size={13} strokeWidth={2.2} />,
     bg: "bg-gray-50",
@@ -78,16 +73,19 @@ const getStatus = (raw: string) =>
     border: "border-gray-200",
   };
 
-// ─── skeleton ─────────────────────────────────────────────────────────────────
-
 const Skeleton = () => (
   <div className="animate-pulse rounded-2xl border border-brand-cream-dark bg-white overflow-hidden">
-    <div className="flex gap-4 p-4">
-      <div className="h-20 w-20 shrink-0 rounded-xl bg-brand-cream-dark" />
-      <div className="flex-1 space-y-2.5 py-1">
-        <div className="h-4 w-3/4 rounded bg-brand-cream-dark" />
-        <div className="h-3 w-1/2 rounded bg-brand-cream-dark" />
-        <div className="h-3 w-1/3 rounded bg-brand-cream-dark" />
+    <div className="p-4 sm:p-5 space-y-3">
+      <div className="flex justify-between">
+        <div className="h-4 w-28 rounded bg-brand-cream-dark" />
+        <div className="h-6 w-24 rounded-full bg-brand-cream-dark" />
+      </div>
+      <div className="flex gap-3">
+        <div className="h-16 w-16 shrink-0 rounded-xl bg-brand-cream-dark" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 w-3/4 rounded bg-brand-cream-dark" />
+          <div className="h-3 w-1/2 rounded bg-brand-cream-dark" />
+        </div>
       </div>
     </div>
     <div className="h-px bg-brand-cream-dark" />
@@ -98,13 +96,86 @@ const Skeleton = () => (
   </div>
 );
 
-// ─── order card ───────────────────────────────────────────────────────────────
+const OrderLineRow = ({ item }: { item: OrderLineItem }) => (
+  <div className="flex items-start gap-3 py-3 first:pt-0 last:pb-0 border-b border-[#f3d2a5]/60 last:border-0">
+    <div className="relative shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-xl overflow-hidden border border-brand-cream-dark bg-brand-cream">
+      <img
+        src={proxyImage(item.product_image_link)}
+        alt={item.product_name}
+        className="object-cover w-full h-full"
+      />
+    </div>
+    <div className="flex-1 min-w-0">
+      <h4 className="text-[14px] font-semibold text-[#2f1a0d] leading-snug line-clamp-2">
+        {item.product_name}
+      </h4>
+      <p className="mt-1 text-xs text-gray-500">
+        Qty: <span className="font-semibold text-gray-700">{item.quantity}</span>
+        <span className="mx-1.5 text-gray-300">·</span>
+        {Number(item.quantity) > 1 ? `Unit: ${item.product_price}` : ""}
+      </p>
+      <p className="mt-1.5 text-sm font-bold text-brand-brown">
+        {formatPrice(item.total_amount)}
+      </p>
+    </div>
+  </div>
+);
 
-const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
+const PricingSummary = ({ order }: { order: Order }) => {
+  const { pricing } = order;
+  const isCod = isCodPayment(order.payment_mode);
+  const pending = Math.max(0, Number(pricing.pending_amount) || 0);
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+          Order Total
+        </p>
+        <p className="font-bold text-[#2f1a0d]">{formatPrice(pricing.total_amount)}</p>
+      </div>
+      {Number(pricing.shipping_charge) > 0 && (
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            Shipping
+          </p>
+          <p className="font-semibold text-gray-700">
+            {formatPrice(pricing.shipping_charge)}
+          </p>
+        </div>
+      )}
+      {isCod && Number(pricing.cod_advance) > 0 && (
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            COD Advance
+          </p>
+          <p className="font-bold text-brand-brown">{formatPrice(pricing.cod_advance)}</p>
+        </div>
+      )}
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+          Paid
+        </p>
+        <p className="font-bold text-emerald-700">{formatPrice(pricing.paid_amount)}</p>
+      </div>
+      {pending > 0 && (
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            Pending
+          </p>
+          <p className="font-bold text-amber-700">{formatPrice(pending)}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const OrderCard = ({ order, index }: { order: Order; index: number }) => {
   const [expanded, setExpanded] = useState(false);
   const status = getStatus(order.orderStatus);
-  const isOnline = order.payment_mode === "2";
+  const isOnline = isOnlinePayment(order.payment_mode);
   const orderNo = order.order_display_id || order.order_no;
+  const itemCount = order.items?.length ?? 0;
 
   return (
     <motion.div
@@ -113,54 +184,43 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
       transition={{ duration: 0.38, delay: index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="group self-start w-full rounded-2xl border border-[#e8cdb0] bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
     >
-      {/* Card header */}
-      <div className="flex items-start gap-4 p-4 sm:p-5">
-        {/* Product image */}
-        <div className="relative shrink-0 h-[72px] w-[72px] sm:h-20 sm:w-20 rounded-xl overflow-hidden border border-brand-cream-dark bg-brand-cream">
-          <img
-            src={proxyImage(order.product_image_link)}
-            alt={order.product_name}
-            className="object-cover w-full h-full"
-          />
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2 flex-wrap">
-            <h3 className="text-[15px] font-bold text-[#2f1a0d] leading-tight line-clamp-2">
-              {order.product_name}
-            </h3>
-            {/* Status badge */}
-            <span
-              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${status.bg} ${status.text} ${status.border} whitespace-nowrap`}
-            >
-              {status.icon}
-              {status.label}
-            </span>
-          </div>
-
-          <p className="mt-1.5 text-[13px] text-gray-600">
-            <span className="font-medium">Order No.</span>{" "}
-            <span className="font-mono font-semibold tracking-wide text-brand-brown">
-              {orderNo}
-            </span>
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 p-4 sm:p-5 pb-3">
+        <div className="min-w-0">
+          <p className="font-mono text-base font-bold tracking-wide text-brand-brown">
+            {orderNo}
           </p>
-
-          <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span className="text-base font-bold text-brand-brown">
-              {formatPrice(order.to_pay)}
-            </span>
-            <span className="text-xs text-gray-400 line-through">
-              {formatPrice(order?.total_amount)}
-            </span>
-            <span className="text-xs text-gray-500">
-              Qty: <span className="font-semibold text-gray-700">{order.quantity}</span>
-            </span>
-          </div>
+          <p className="mt-1 text-xs text-gray-500">
+            Order #{order.order_no}
+            {itemCount > 1 && (
+              <span className="text-gray-400">
+                {" "}
+                · {itemCount} items
+              </span>
+            )}
+          </p>
         </div>
+        <span
+          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${status.bg} ${status.text} ${status.border} whitespace-nowrap`}
+        >
+          {status.icon}
+          {status.label}
+        </span>
       </div>
 
-      {/* Divider + meta row */}
+      {/* Items */}
+      <div className="px-4 sm:px-5">
+        {order.items?.map((item, i) => (
+          <OrderLineRow key={`${item.product_name}-${i}`} item={item} />
+        ))}
+      </div>
+
+      {/* Pricing summary */}
+      <div className="mx-4 sm:mx-5 mt-2 mb-3 rounded-xl bg-[#fffaf4] border border-[#f3d2a5]/80 px-4 py-3">
+        <PricingSummary order={order} />
+      </div>
+
+      {/* Meta row */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#f3d2a5] px-4 sm:px-5 py-2.5 bg-[#fffaf4]">
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
           <span className="flex items-center gap-1">
@@ -173,11 +233,10 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
             ) : (
               <Wallet size={12} className="text-brand-orange" />
             )}
-            {isOnline ? "Online Payment" : "Cash on Delivery"}
+            {isOnline ? "Online" : "Cash on Delivery"}
           </span>
         </div>
 
-        {/* Expand toggle */}
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
@@ -190,7 +249,7 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
         </button>
       </div>
 
-      {/* Expanded details */}
+      {/* Expanded shipping */}
       <AnimatePresence initial={false}>
         {expanded && (
           <motion.div
@@ -200,32 +259,33 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
             transition={{ duration: 0.28, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="grid sm:grid-cols-2 gap-3 px-4 sm:px-5 py-4 border-t border-[#f3d2a5] bg-[#fdf9f4]">
-              {/* Delivery address */}
+            <div className="px-4 sm:px-5 py-4 border-t border-[#f3d2a5] bg-[#fdf9f4] space-y-3">
               <div className="space-y-1">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-brand-orange">
                   Delivery Address
                 </p>
                 <div className="flex gap-2 text-sm text-gray-700">
                   <MapPin size={14} className="mt-0.5 shrink-0 text-brand-brown" />
-                  <span>
-                    {order.address}, {order.city}, {order.state} – {order.pincode},{" "}
-                    {order.country}
-                  </span>
+                  <div>
+                    <p className="flex items-center gap-1.5 font-semibold text-[#2f1a0d]">
+                      <User size={13} className="text-brand-brown" />
+                      {order.shipping.name}
+                    </p>
+                    <p className="mt-1">
+                      {order.shipping.address}, {order.shipping.city},{" "}
+                      {order.shipping.state} – {order.shipping.pincode},{" "}
+                      {order.shipping.country}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Order info */}
-              <div className="space-y-2 text-sm text-gray-700">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-brand-orange">
-                  Order Info
-                </p>
-                <div className="flex items-center gap-2">
-                  <Package size={13} className="text-brand-brown shrink-0" />
-                  <span>
-                    Total: <span className="font-semibold">{formatPrice(order.total_amount)}</span>
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Package size={13} className="text-brand-brown shrink-0" />
+                <span>
+                  {order.pricing.items_total}{" "}
+                  {order.pricing.items_total === 1 ? "item" : "items"} in this order
+                </span>
               </div>
             </div>
           </motion.div>
@@ -234,8 +294,6 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
     </motion.div>
   );
 };
-
-// ─── empty state ──────────────────────────────────────────────────────────────
 
 const EmptyOrders = () => (
   <motion.div
@@ -249,7 +307,7 @@ const EmptyOrders = () => (
     </div>
     <h3 className="text-xl font-bold text-[#2f1a0d] mb-2">No orders yet</h3>
     <p className="text-sm text-gray-500 max-w-xs mb-6">
-      You haven't placed any orders. Explore our sacred offerings and place your first order.
+      You haven&apos;t placed any orders. Explore our sacred offerings and place your first order.
     </p>
     <Link
       href="/shop"
@@ -261,11 +319,9 @@ const EmptyOrders = () => (
   </motion.div>
 );
 
-// ─── page ──────────────────────────────────────────────────────────────────────
-
 export default function OrdersPage() {
   const { isLoggedIn, openLogin } = useAuthStore();
-  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -278,7 +334,7 @@ export default function OrdersPage() {
     setError(null);
     getOrderHistory()
       .then((res) => {
-        setOrders(res?.data ?? []);
+        setOrders(res?.orders ?? []);
       })
       .catch(() => {
         setError("Unable to load your orders. Please try again.");
@@ -287,15 +343,12 @@ export default function OrdersPage() {
   }, [isLoggedIn]);
 
   return (
-    <div className="min-h-screen bg-[#fdf8f2]">
-      {/* ── Heading ── */}
+    <div className="bg-[#fdf8f2]">
       <div className="pt-7 md:pt-9 px-4 flex items-center justify-center">
         <h1 className="text-3xl md:text-4xl font-bold text-brand-brown">My Orders</h1>
       </div>
 
-      {/* ── Content ── */}
       <div className="max-w-frame mx-auto px-4 xl:px-0 py-8 sm:py-10">
-        {/* Not logged in */}
         {!isLoggedIn && !loading && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -320,7 +373,6 @@ export default function OrdersPage() {
           </motion.div>
         )}
 
-        {/* Error */}
         {error && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -331,25 +383,22 @@ export default function OrdersPage() {
           </motion.div>
         )}
 
-        {/* Skeletons */}
         {loading && (
-          <div className="grid gap-4 sm:grid-cols-2 items-start">
+          <div className="grid gap-4 lg:grid-cols-2 items-start">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} />
             ))}
           </div>
         )}
 
-        {/* Orders grid */}
         {!loading && isLoggedIn && !error && orders.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2 items-start">
+          <div className="grid gap-4 lg:grid-cols-2 items-start">
             {orders.map((order, i) => (
-              <OrderCard key={order.order_display_id + i} order={order} index={i} />
+              <OrderCard key={order.order_display_id} order={order} index={i} />
             ))}
           </div>
         )}
 
-        {/* Empty */}
         {!loading && isLoggedIn && !error && orders.length === 0 && <EmptyOrders />}
       </div>
     </div>
