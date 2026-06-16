@@ -1,4 +1,4 @@
-import { apiPost, fetcher } from "@/utils/api";
+import { apiGet, fetcher } from "@/utils/api";
 
 export interface OrderItem {
   orderStatus: string;
@@ -70,4 +70,34 @@ export const createOrderApi = async (
   });
 
   return response;
+};
+
+export interface OrderStatusAddress {
+  address_1: string;
+  address_2: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  country: string;
+}
+
+export interface OrderStatusResponse {
+  msg: string;
+  status: boolean;
+  order_display_id: string;
+  order_id: string;
+  payment_type: string;
+  payment_status: string;
+  total_price: string;
+  company: string;
+  customer_name: string;
+  phone_number: string;
+  address: OrderStatusAddress;
+  email: string;
+}
+
+export const getOrderStatus = async (
+  orderId: string
+): Promise<OrderStatusResponse> => {
+  return apiGet<OrderStatusResponse>("/getOrderStatus", { order_id: orderId });
 };

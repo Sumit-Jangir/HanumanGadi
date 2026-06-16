@@ -104,7 +104,7 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
   const [expanded, setExpanded] = useState(false);
   const status = getStatus(order.orderStatus);
   const isOnline = order.payment_mode === "2";
-  const orderNo = order.order_no || order.order_display_id;
+  const orderNo = order.order_display_id || order.order_no;
 
   return (
     <motion.div
@@ -142,7 +142,7 @@ const OrderCard = ({ order, index }: { order: OrderItem; index: number }) => {
           <p className="mt-1.5 text-[13px] text-gray-600">
             <span className="font-medium">Order No.</span>{" "}
             <span className="font-mono font-semibold tracking-wide text-brand-brown">
-              #{orderNo}
+              {orderNo}
             </span>
           </p>
 
