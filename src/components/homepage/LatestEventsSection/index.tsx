@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useGalleryStore } from "@/lib/stores/galleryStore";
 import { motion } from "framer-motion";
+import { getImageSrc, getVideoSrc } from "@/utils/media";
 
 const LatestEventsSection = () => {
   const { videos, images, fetchGallery, loading } = useGalleryStore();
@@ -36,16 +37,7 @@ const LatestEventsSection = () => {
     (v) => v.title.toLowerCase().includes("ram raksha yantra")
   ) || videos[0];
   let thumbnailImage = images[3] || "https://hanumangadi.com/hanumangadi/uploads/images/WhatsApp_Image_2025-02-03_at_17_51_45.jpeg";
-  // Proxy external thumbnail images to avoid CORS issues
-  if (thumbnailImage && thumbnailImage.startsWith("http")) {
-    thumbnailImage = `/api/image-proxy?url=${encodeURIComponent(thumbnailImage)}`;
-  }
-
-  // Use proxy for external video URLs
-  const getVideoSrc = (url: string) =>
-    url && url.startsWith("http")
-      ? `/api/video-proxy?url=${encodeURIComponent(url)}`
-      : url;
+  thumbnailImage = getImageSrc(thumbnailImage);
 
   return (
     <div
