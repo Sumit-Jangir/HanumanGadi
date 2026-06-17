@@ -34,6 +34,7 @@ export interface Order {
   order_no: string;
   order_display_id: string;
   orderStatus: string;
+  paymentStatus?: string;
   order_date: string;
   payment_mode: string;
   shipping: OrderShipping;

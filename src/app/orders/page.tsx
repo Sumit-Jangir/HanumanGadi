@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Clock,
   User,
+  XCircle,
 } from "lucide-react";
 import useAuthStore from "@/lib/stores/authStore";
 import {
@@ -73,6 +74,17 @@ const getStatus = (raw: string) =>
     border: "border-gray-200",
   };
 
+const isPaymentFailed = (paymentStatus?: string) =>
+  paymentStatus?.trim().toLowerCase() === "failed";
+
+const CANCELLED_STATUS = {
+  label: "Order Cancelled",
+  icon: <XCircle size={13} strokeWidth={2.2} />,
+  bg: "bg-red-50",
+  text: "text-red-700",
+  border: "border-red-200",
+};
+
 const Skeleton = () => (
   <div className="animate-pulse rounded-2xl border border-brand-cream-dark bg-white overflow-hidden">
     <div className="p-4 sm:p-5 space-y-3">
@@ -121,12 +133,22 @@ const OrderLineRow = ({ item }: { item: OrderLineItem }) => (
   </div>
 );
 
-const PricingSummary = ({ order }: { order: Order }) => {
+const PricingSummary = ({ order, cancelled = false }: { order: Order; cancelled?: boolean }) => {
   const { pricing } = order;
   const isCod = isCodPayment(order.payment_mode);
   const pending = Math.max(0, Number(pricing.pending_amount) || 0);
 
   return (
+    <>
+    {cancelled ? (
+      <div className="col-span-full flex items-center gap-2 text-red-700">
+        <XCircle size={15} strokeWidth={2.2} className="shrink-0" />
+        <p className="text-sm font-medium">
+        If any amount was deducted, it will be refunded within 5-7 days.
+
+        </p>
+      </div>
+    ) : (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
@@ -167,12 +189,15 @@ const PricingSummary = ({ order }: { order: Order }) => {
         </div>
       )}
     </div>
+    )}
+    </>
   );
 };
 
 const OrderCard = ({ order, index }: { order: Order; index: number }) => {
   const [expanded, setExpanded] = useState(false);
-  const status = getStatus(order.orderStatus);
+  const paymentFailed = isPaymentFailed(order.paymentStatus);
+  const status = paymentFailed ? CANCELLED_STATUS : getStatus(order.orderStatus);
   const isOnline = isOnlinePayment(order.payment_mode);
   const orderNo = order.order_display_id || order.order_no;
   const itemCount = order.items?.length ?? 0;
@@ -182,7 +207,9 @@ const OrderCard = ({ order, index }: { order: Order; index: number }) => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="group self-start w-full rounded-2xl border border-[#e8cdb0] bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+      className={`group self-start w-full rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 ${
+        paymentFailed ? "border-red-200" : "border-[#e8cdb0]"
+      }`}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3 p-4 sm:p-5 pb-3">
@@ -208,6 +235,12 @@ const OrderCard = ({ order, index }: { order: Order; index: number }) => {
         </span>
       </div>
 
+      {paymentFailed && (
+        <div className="mx-4 sm:mx-5 mb-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-700">
+          Payment failed. This order has been cancelled.
+        </div>
+      )}
+
       {/* Items */}
       <div className="px-4 sm:px-5">
         {order.items?.map((item, i) => (
@@ -217,7 +250,7 @@ const OrderCard = ({ order, index }: { order: Order; index: number }) => {
 
       {/* Pricing summary */}
       <div className="mx-4 sm:mx-5 mt-2 mb-3 rounded-xl bg-[#fffaf4] border border-[#f3d2a5]/80 px-4 py-3">
-        <PricingSummary order={order} />
+        <PricingSummary order={order} cancelled={paymentFailed} />
       </div>
 
       {/* Meta row */}

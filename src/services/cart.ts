@@ -1,3 +1,6 @@
+import { apiGet, apiPost } from "@/utils/api";
+
+
 export const removeFromCartApi = async (userId: string, productId: string, qty: string = "1") => {
   const formData = new FormData();
   formData.append("user_id", userId);
@@ -9,7 +12,6 @@ export const removeFromCartApi = async (userId: string, productId: string, qty: 
     "Content-Type": "multipart/form-data",
   });
 };
-import { apiGet, apiPost } from "@/utils/api";
 
 export const addToCartApi = async (userId: string, productId: string, qty: string) => {
   const formData = new FormData();
