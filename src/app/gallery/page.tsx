@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Play, Eye } from "lucide-react";
 import { useGalleryStore } from "@/lib/stores/galleryStore";
+import { getImageSrc } from "@/utils/media";
 
 type TabType = "all" | "images" | "videos";
 
@@ -40,11 +41,7 @@ const getVideoEmbedUrl = (url: string) => {
     return url;
 };
 
-const getProxyImage = (src: string) => {
-    return src?.startsWith("http")
-        ? `/api/image-proxy?url=${encodeURIComponent(src)}`
-        : src;
-};
+const getProxyImage = (src: string) => getImageSrc(src) || src;
 
 const SWIPE_THRESHOLD = 50;
 

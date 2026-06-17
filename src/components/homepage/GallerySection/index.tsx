@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useGalleryStore } from "@/lib/stores/galleryStore";
 import { useLanguageStore } from "@/lib/stores/languageStore";
 import { Images } from "lucide-react";
+import { getImageSrc } from "@/utils/media";
 
 const copy = {
   en: { title: "Our Gallery", subtitle: "Glimpses of devotion & divine moments" },
@@ -27,10 +28,7 @@ const GallerySection = () => {
 
   const preview = images.slice(0, 4);
 
-  const getProxyImage = (src: string) =>
-    src?.startsWith("http")
-      ? `/api/image-proxy?url=${encodeURIComponent(src)}`
-      : src;
+  const getProxyImage = (src: string) => getImageSrc(src) || src;
 
   return (
     <section className="bg-[#e8d5be] py-10 md:py-14 md:px-14 mx-2 md:mx-6 xl:mx-16 rounded-tl-[50px] md:rounded-tl-[100px] rounded-br-[50px] md:rounded-br-[100px]">

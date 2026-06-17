@@ -24,6 +24,7 @@ import {
   Order,
   OrderLineItem,
 } from "@/services/order";
+import { getImageSrc } from "@/utils/media";
 
 const formatPrice = (val: string | number) =>
   new Intl.NumberFormat("en-IN", {
@@ -43,7 +44,7 @@ const formatDate = (raw: string) => {
 };
 
 const proxyImage = (url: string) =>
-  url ? `/api/image-proxy?url=${encodeURIComponent(url)}` : "/images/placeholder.png";
+  getImageSrc(url) || "/images/placeholder.png";
 
 const STATUS_MAP: Record<
   string,

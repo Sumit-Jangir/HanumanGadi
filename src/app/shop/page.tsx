@@ -9,6 +9,7 @@ import Image from "next/image";
 import useAuthStore from "@/lib/stores/authStore";
 import { useCartStore } from "@/lib/stores/cartStore";
 import ProductCartAction from "@/components/product/ProductCartAction";
+import { getImageSrc } from "@/utils/media";
 
 const SKELETON_COUNT = 3;
 const ADDED_FEEDBACK_MS = 1500;
@@ -49,9 +50,7 @@ const getLocalizedTitle = (item: HomeProduct, language: AppLanguage) =>
   language === "hi" ? item.titleHi || item.title : item.title;
 
 const getProductImageSrc = (image?: string) =>
-  image?.startsWith("http")
-    ? `/api/image-proxy?url=${encodeURIComponent(image)}`
-    : FALLBACK_IMAGE;
+  getImageSrc(image) || FALLBACK_IMAGE;
 
 function ShopProductSkeleton() {
   return (

@@ -9,6 +9,7 @@ import { useLanguageStore } from "@/lib/stores/languageStore";
 import useAuthStore from "@/lib/stores/authStore";
 import { useCartStore } from "@/lib/stores/cartStore";
 import ProductCartAction from "@/components/product/ProductCartAction";
+import { getImageSrc } from "@/utils/media";
 
 const copy = {
   en: {
@@ -225,9 +226,7 @@ const ServicesSection = () => {
             const title =
               language === "hi" ? item.titleHi || item.title : item.title;
             const imageSrc =
-              item.image && item.image.startsWith("http")
-                ? `/api/image-proxy?url=${encodeURIComponent(item.image)}`
-                : "/banners/AstrologerContactUs.png";
+              getImageSrc(item.image) || "/banners/AstrologerContactUs.png";
             const isUpdating = updatingId === item.slug;
             const isAdded = addedId === item.slug;
             return (

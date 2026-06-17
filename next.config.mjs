@@ -21,7 +21,7 @@ const nextConfig = {
 			{
 				// Proxy all /api/proxy/* requests server-side → eliminates browser CORS
 				source: "/api/proxy/:path*",
-				destination: "https://hanumangadi.com/hanumangadi/demoapi/:path*",
+				destination: "https://hanumangadi.com/hanumangadi/api1/:path*",
 			},
 		];
 	},
