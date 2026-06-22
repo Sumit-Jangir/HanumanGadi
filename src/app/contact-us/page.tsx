@@ -35,8 +35,13 @@ const content = {
     addressLabel: "Address",
     contactLabel: "Contact Details",
     socialLabel: "Social Media",
-    orgName: "Hanumangadi Dot Com",
-    addressLines: ["Shri Ram Satsang Bhawan Choti Chhavni", "Ayodhya, 224001"],
+    orgName: "Hanumangadi",
+    addressLines: [
+      "Shri Ram Satsang Bhawan",
+      "Choti Chhavni Ayodhya",
+      "224001",
+    ],
+    phone: "+91 8239455455",
   },
   hi: {
     bannerAlt: "संपर्क करें - हनुमानगढ़ी",
@@ -54,8 +59,13 @@ const content = {
     addressLabel: "पता",
     contactLabel: "संपर्क विवरण",
     socialLabel: "सोशल मीडिया",
-    orgName: "हनुमानगादी डॉट कॉम",
-    addressLines: ["श्री रामसत्संग भवन छोटी छावनी", "अयोध्या, 224001"],
+    orgName: "हनुमानगढ़ी",
+    addressLines: [
+      "श्री रामसत्संग भवन",
+      "छोटी छावनी, अयोध्या",
+      "224001",
+    ],
+    phone: "+91 8239455455",
   },
 };
 
@@ -359,9 +369,12 @@ export default function ContactUsPage() {
               </p>
 
               <p className="text-sm text-gray-600 leading-relaxed">
-                {t.addressLines[0]}
-                <br />
-                {t.addressLines[1]}
+                {t.addressLines.map((line) => (
+                  <span key={line}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
               </p>
             </div>
 
@@ -378,7 +391,12 @@ export default function ContactUsPage() {
               <div className="space-y-2 text-sm text-gray-700">
                 <div className="flex items-center gap-2">
                   <FaPhone className="text-[#7a4326] text-xs" />
-                  <span>(+91) 8239455455</span>
+                  <a
+                    href="tel:+918239455455"
+                    className="hover:text-[#7a4326] transition-colors"
+                  >
+                    {t.phone}
+                  </a>
                 </div>
 
                 <div className="flex items-center gap-2">

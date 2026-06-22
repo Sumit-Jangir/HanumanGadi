@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Serve existing files and directories as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Product detail: any /shop/product/<slug> -> single exported page
+RewriteRule ^shop/product/.+ /shop/product/index.html [L]

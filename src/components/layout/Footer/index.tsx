@@ -71,6 +71,8 @@ const Footer = () => {
                 <p className="text-[14px] md:text-[15px] text-[#2f1a0d] leading-7 font-semibold mt-5 break-words">
                   {language === "hi" ? (
                     <>
+                      हनुमानगढ़ी
+                      <br />
                       श्री रामसत्संग भवन
                       <br />
                       छोटी छावनी, अयोध्या
@@ -79,9 +81,11 @@ const Footer = () => {
                     </>
                   ) : (
                     <>
-                      Shri Ram Satsang Bhavan
+                      Hanumangadi
                       <br />
-                      Choti Chawni, Ayodhya
+                      Shri Ram Satsang Bhawan
+                      <br />
+                      Choti Chhavni Ayodhya
                       <br />
                       224001
                     </>
@@ -129,10 +133,10 @@ const Footer = () => {
                   <div className="flex items-start gap-3">
                     <FaPhoneAlt className="mt-1 shrink-0" />
                     <a
-                      href="tel:+919876543210"
+                      href="tel:+918239455455"
                       className="text-[#3b220f] hover:text-[#f28c18] transition font-medium"
                     >
-                      +91 9876543210
+                      +91 8239455455
                     </a>
                   </div>
 

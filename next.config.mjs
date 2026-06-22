@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
+const isProductionBuild = process.env.NODE_ENV === "production";
+
 const nextConfig = {
+	// Static export only for `npm run build` — keeps `next dev` working for any product slug
+	...(isProductionBuild ? { output: "export" } : {}),
+	trailingSlash: true,
 	images: {
-		// domains: [
-		// 	"hanumangadi.com",
-		// 	"www.hanumangadi.com"
-		// ],
+		unoptimized: true,
 		remotePatterns: [
 			{
 				protocol: "https",
@@ -15,15 +17,6 @@ const nextConfig = {
 				hostname: "www.hanumangadi.com",
 			},
 		],
-	},
-	async rewrites() {
-		return [
-			{
-				// Proxy all /api/proxy/* requests server-side → eliminates browser CORS
-				source: "/api/proxy/:path*",
-				destination: "https://hanumangadi.com/hanumangadi/api1/:path*",
-			},
-		];
 	},
 };
 
