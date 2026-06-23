@@ -31,8 +31,13 @@ const content = {
     quoteText:
       "The HanumanGadi team that works in his guidance consists of many expert astrologers pertaining to different schools of astrology.",
     contactUs: "Contact Us",
-    orgName: "Hanumangadi Dot Com",
-    address: ["Shri Ram Satsang Bhawan Choti Chhavni", "Ayodhya, 224001"],
+    orgName: "Hanumangadi",
+    address: [
+      "Shri Ram Satsang Bhawan",
+      "Choti Chhavni Ayodhya",
+      "224001",
+    ],
+    phone: "+91 8239455455",
   },
   hi: {
     welcomeHeading: ["हनुमानगढ़ी डॉट कॉम में", "आपका स्वागत है"],
@@ -58,8 +63,13 @@ const content = {
     quoteText:
       "उनके मार्गदर्शन में काम करने वाली हनुमानगादी टीम में ज्योतिष के विभिन्न विद्यालयों से संबंधित कई विशेषज्ञ ज्योतिषी शामिल हैं।",
     contactUs: "संपर्क करें",
-    orgName: "हनुमानगढ़ी डॉट कॉम",
-    address: ["श्री राम सत्संग भवन छोटी छावनी", "अयोध्या, 224001"],
+    orgName: "हनुमानगढ़ी",
+    address: [
+      "श्री रामसत्संग भवन",
+      "छोटी छावनी, अयोध्या",
+      "224001",
+    ],
+    phone: "+91 8239455455",
   },
 };
 
@@ -329,18 +339,23 @@ export default function AboutUsPage() {
               <p className="text-base font-bold mb-3">{t.orgName}</p>
 
               <p className="text-sm leading-relaxed text-white/85 mb-4">
-                {t.address[0]}, {t.address[1]}
+                {t.address.map((line) => (
+                  <span key={line}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
               </p>
 
               <div className="space-y-2.5 text-sm">
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+918239455455"
                   className="flex items-center gap-2.5 text-white/90 transition-colors hover:text-white"
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15">
                     <FaPhoneAlt className="text-xs" />
                   </span>
-                  +91 9876543210
+                  {t.phone}
                 </a>
                 <a
                   href="mailto:hanumangadiayodhya@gmail.com"
