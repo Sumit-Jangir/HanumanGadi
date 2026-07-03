@@ -156,6 +156,50 @@ export const termsAndConditionsContent: PolicyPageContent = {
   ],
 };
 
+export const deleteAccountContent: PolicyPageContent = {
+  pageTitle: "Delete Your Account",
+  intro:
+    "Hanumangadi (HANUMANGADI DOT COM) allows users of the Hanumangadi mobile app and hanumangadi.com to request deletion of their account and associated personal data. This page explains how to submit a deletion request, what data is removed, and what may be retained.",
+  sections: [
+    {
+      title: "How to Request Account Deletion",
+      content:
+        "To delete your Hanumangadi account, send an email to hanumangadiayodhya@gmail.com from the email address linked to your account (if applicable), or include your registered mobile number in the request. Use the subject line \"Account Deletion Request\" and confirm that you want your account and personal data deleted. We will verify your identity using your registered phone number before processing the request. Account deletion requests are typically processed within 7 business days.",
+    },
+    {
+      title: "Data That Will Be Deleted",
+      content: "",
+      subsections: [
+        {
+          title: "Account Information",
+          content:
+            "Your registered phone number, account credentials, and any profile information stored on our servers will be permanently deleted.",
+        },
+        {
+          title: "Profile Images",
+          content:
+            "Profile pictures uploaded within the app are stored on your device only. Deleting the app or clearing app data removes them locally. No profile images are stored on our servers.",
+        },
+        {
+          title: "Associated Personal Data",
+          content:
+            "Personal information linked to your account, including saved shipping details and order history tied to your user profile, will be removed from our active systems upon account deletion.",
+        },
+      ],
+    },
+    {
+      title: "Data That May Be Retained",
+      content:
+        "Certain information may be retained where required by law or for legitimate business purposes. This may include anonymized or aggregated usage data, records required for tax, accounting, or legal compliance, and information related to unresolved disputes or chargebacks. Any retained data is kept only for the minimum period required by applicable law and is not used for marketing purposes.",
+    },
+    {
+      title: "Contact Us",
+      content:
+        "If you have questions about account deletion or your personal data, contact us at hanumangadiayodhya@gmail.com or call +91 8239455455. Address: Shri Ram Satsang Bhawan, Choti Chhavni Ayodhya, 224001, India.",
+    },
+  ],
+};
+
 export const returnRefundPolicyContent: PolicyPageContent = {
   pageTitle: "Return and Refund Policy",
   sections: [

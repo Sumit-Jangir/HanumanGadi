@@ -14,6 +14,10 @@ export default function PolicyContent({ content }: { content: PolicyPageContent 
         <p className="font-bold text-brand-brown">{content.intro}</p>
       )}
 
+      {content.pageTitle === "Delete Your Account" && content.intro && (
+        <p>{content.intro}</p>
+      )}
+
       {content.sections.map((section) => (
         <section key={section.title} className="space-y-3">
           <h2 className="font-bold text-brand-brown text-base md:text-lg">
